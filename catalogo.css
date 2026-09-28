@@ -1,0 +1,676 @@
+/* =========================================
+   PANTALLA PRINCIPAL / CATÁLOGO FORD DIETRICH
+========================================= */
+
+:root {
+    /* MODO CLARO (Mejorado - Fondo gris suave y bordes marcados) */
+    --bg-main: #eef2f6;
+    --bg-card: #ffffff;
+    --bg-card-subtle: #f4f7f9;
+    --border-color: #cbd5e1;
+    
+    --text-primary: #1a202c;
+    --text-secondary: #4a5568;
+    --text-muted: #718096;
+    
+    --ford-blue: #003478;
+    --ford-blue-hover: #00224f;
+    --ford-light: #eaf2fb;
+    --ford-accent: #0066d6;
+    
+    --success-green: #25D366;
+    --warning-orange: #ed8936;
+    
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    --shadow-lg: 0 10px 25px rgba(0,0,0,0.12);
+}
+
+[data-theme="dark"] {
+    --bg-main: #0f172a;
+    --bg-card: #1e293b;
+    --bg-subtle: #243447;
+    --border-color: #334155;
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+    --ford-blue: #3b82f6;
+    --ford-blue-hover: #60a5fa;
+    --ford-light: rgba(59, 130, 246, 0.15);
+    --ford-accent: #60a5fa;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    min-height: 100vh;
+}
+
+h1, h2, h3, h4, strong {
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* HEADER */
+.catalogo-header {
+    background-color: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-content {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 14px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-logos {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.logo-dietrich { height: 26px; object-fit: contain; }
+.logo-ford { height: 32px; object-fit: contain; }
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.btn-header-action {
+    background: var(--bg-subtle);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+.btn-header-action:hover {
+    border-color: var(--ford-blue);
+    color: var(--ford-blue);
+}
+
+.btn-icon-action {
+    background: var(--bg-subtle);
+    border: 1px solid var(--border-color);
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.btn-icon-action:hover { background: var(--border-color); }
+
+.user-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--ford-light);
+    color: var(--ford-blue);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+/* LAYOUT PRINCIPAL */
+.catalogo-container {
+    max-width: 1300px;
+    margin: 40px auto;
+    padding: 0 24px;
+}
+
+.catalogo-hero {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.catalogo-hero h1 {
+    font-size: 2rem;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+}
+
+.catalogo-hero p {
+    color: var(--text-muted);
+    font-size: 1rem;
+}
+
+/* GRILLA DE TARJETAS */
+.grid-catalogo {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+}
+
+.card-plan-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.card-plan-item:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--ford-blue);
+}
+
+.card-plan-img-wrapper {
+    width: 100%;
+    height: 190px;
+    background: #000000;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-plan-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.card-plan-item:hover .card-plan-img-wrapper img {
+    transform: scale(1.05);
+}
+
+.card-plan-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: var(--ford-accent);
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.card-plan-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: space-between;
+}
+
+.card-plan-title {
+    font-size: 1.15rem;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    font-weight: 700;
+}
+
+.card-plan-subtitle {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-bottom: 16px;
+}
+
+.card-plan-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 14px;
+    border-top: 1px solid var(--border-color);
+}
+
+.card-plan-price span {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    display: block;
+}
+
+.card-plan-price strong {
+    font-size: 1.1rem;
+    color: var(--ford-blue);
+}
+
+.btn-cotizar-card {
+    background: var(--ford-blue);
+    color: #ffffff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+/* MODALES */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.modal-card {
+    background: var(--bg-card);
+    border-radius: 14px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+}
+
+.modal-card.modal-lg {
+    max-width: 650px;
+}
+
+.modal-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+}
+
+.btn-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-muted);
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.campo-grupo {
+    margin-bottom: 14px;
+}
+
+.campo-grupo label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: var(--text-secondary);
+}
+
+.campo-grupo input {
+    width: 100%;
+    padding: 10px 12px;
+    background: var(--bg-subtle);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+}
+.campo-grupo input:focus {
+    outline: none;
+    border-color: var(--ford-blue);
+}
+
+.divider {
+    border: 0;
+    border-top: 1px solid var(--border-color);
+    margin: 18px 0;
+}
+
+.campo-tema {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.campo-tema strong { font-size: 0.95rem; color: var(--text-primary); }
+.campo-tema p { font-size: 0.75rem; color: var(--text-muted); }
+
+.btn-theme-toggle {
+    background: var(--bg-subtle);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.btn-guardar-perfil {
+    width: 100%;
+    background: var(--ford-blue);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+
+/* LISTA DE CIRCULARES */
+.lista-circulares {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.circular-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px;
+    background: var(--bg-subtle);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+.circular-item strong { color: var(--ford-blue); font-size: 0.95rem; }
+.circular-item p { color: var(--text-muted); font-size: 0.8rem; margin-top: 2px; }
+
+.btn-descargar-doc {
+    background: var(--ford-light);
+    color: var(--ford-blue);
+    padding: 6px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.8rem;
+}
+.btn-descargar-doc:hover {
+    background: var(--ford-blue);
+    color: white;
+}
+
+
+/* =========================================
+   VISTA HISTORIAL (TABLA CRM)
+========================================= */
+.card-historial {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.tabla-crm {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.tabla-crm th {
+    background: var(--bg-subtle);
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    padding: 15px;
+    text-align: left;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.tabla-crm td {
+    padding: 15px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary);
+    vertical-align: middle;
+}
+
+.tabla-crm tr:hover td {
+    background-color: var(--ford-light);
+}
+
+.cliente-nombre {
+    font-weight: 700;
+    color: var(--ford-blue);
+    display: block;
+}
+
+.badge-estado {
+    background: var(--bg-subtle, #e2e8f0);
+    color: var(--text-secondary, #4a5568);
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+.badge-estado.nuevo { background: var(--ford-light); color: var(--ford-blue); }
+
+.acciones-tabla {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-accion-sm {
+    background: var(--bg-subtle);
+    border: 1px solid var(--border-color);
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    color: var(--text-primary);
+    transition: 0.2s;
+    text-decoration: none;
+}
+.btn-accion-sm:hover { background: var(--ford-blue); color: white; border-color: var(--ford-blue); }
+
+/* =========================================
+   TABS, PAGINACIÓN Y CALENDARIO
+========================================= */
+.tabs-historial { display: flex; gap: 10px; margin-bottom: 20px; }
+.tabs-historial button { padding: 10px 20px; border: 1px solid var(--border-color); background: var(--bg-card); border-radius: 8px; cursor: pointer; font-weight: bold; color: var(--text-secondary); transition: 0.2s;}
+.tabs-historial button.tab-activa { background: var(--ford-blue); color: white; border-color: var(--ford-blue); }
+
+.paginacion-crm { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: var(--bg-card); border-top: 1px solid var(--border-color); }
+.paginacion-crm button { padding: 8px 15px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-subtle); cursor: pointer; font-weight: bold; color: var(--ford-blue);}
+.paginacion-crm button:disabled { opacity: 0.5; cursor: not-allowed; color: var(--text-muted); }
+#page-indicator { font-size: 0.9rem; font-weight: bold; color: var(--text-secondary); }
+
+/* Calendario */
+.calendario-header { display: flex; justify-content: space-between; align-items: center; background: var(--bg-card); padding: 20px; border-radius: 12px 12px 0 0; border: 1px solid var(--border-color); border-bottom: none; }
+.calendario-header h3 { color: var(--ford-blue); font-size: 1.3rem; }
+.calendario-header button { background: var(--ford-light); border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; color: var(--ford-blue);}
+.calendario-grid-dias { display: grid; grid-template-columns: repeat(7, 1fr); background: var(--bg-card); border-left: 1px solid var(--border-color); border-right: 1px solid var(--border-color);}
+.cal-day-name { background: var(--bg-subtle); text-align: center; padding: 10px; font-size: 0.8rem; font-weight: bold; color: var(--text-muted); border-bottom: 1px solid var(--border-color); border-top: 1px solid var(--border-color);}
+.calendario-grid { display: grid; grid-template-columns: repeat(7, 1fr); background: var(--bg-card); border: 1px solid var(--border-color); border-top: none; border-radius: 0 0 12px 12px; overflow: hidden; }
+.cal-day { min-height: 110px; padding: 10px; border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 5px; }
+.cal-day:nth-child(7n) { border-right: none; }
+.cal-date { font-weight: bold; color: var(--text-secondary); font-size: 0.9rem; align-self: flex-end; margin-bottom: 5px; }
+.cal-day.empty { background: var(--bg-subtle); }
+.cal-day.today .cal-date { background: var(--ford-accent); color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; }
+.quote-badge { background: var(--ford-light); color: var(--ford-blue); font-size: 0.75rem; padding: 4px 6px; border-radius: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; font-weight: 600; text-decoration: none; border: 1px solid var(--ford-blue); }
+.quote-badge:hover { background: var(--ford-blue); color: white;}
+
+/* Agrupador de Cotizaciones Calendario */
+/* =========================================
+   ESTÉTICA DE FILTROS MODERNOS
+========================================= */
+.filtros-container { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+
+.input-filtro { 
+    padding: 10px 14px; 
+    border: 1px solid var(--border-color); 
+    border-radius: 8px; 
+    background: var(--bg-card); 
+    color: var(--text-primary); 
+    font-size: 0.85rem; 
+    font-family: 'Montserrat', sans-serif; 
+    font-weight: 600; 
+    outline: none; 
+    cursor: pointer; 
+}
+.input-filtro:focus { border-color: var(--ford-blue); box-shadow: 0 0 0 2px var(--ford-light); }
+
+.rango-fechas { 
+    display: flex; align-items: center; gap: 8px; 
+    background: var(--bg-card); 
+    border: 1px solid var(--border-color); 
+    border-radius: 8px; padding: 0 5px; 
+}
+.rango-fechas .input-filtro { border: none; background: transparent; box-shadow: none; padding: 10px 5px;}
+.separador-fecha { color: var(--text-muted); font-weight: bold; }
+
+.btn-limpiar { 
+    padding: 10px 16px; border: 1px solid var(--border-color); border-radius: 8px; 
+    background: var(--bg-subtle); color: var(--text-secondary); cursor: pointer; 
+    font-weight: bold; transition: 0.2s; 
+}
+.btn-limpiar:hover { background: var(--border-color); color: var(--text-primary); }
+
+/* =========================================
+   CALENDARIO: TOOLTIP FLOTANTE
+========================================= */
+.cal-day { position: relative; display: flex; flex-direction: column; }
+
+/* El contenedor del botón rojo/azul */
+.quotes-wrapper { position: relative; margin-top: auto; } 
+
+/* El botón visible "X Cotizaciones" */
+.quotes-badge { 
+    background: var(--ford-blue); color: white; border-radius: 6px; 
+    padding: 5px 8px; font-size: 0.75rem; font-weight: bold; 
+    text-align: center; cursor: pointer; display: block; 
+    box-shadow: var(--shadow-sm); transition: transform 0.1s;
+}
+.quotes-badge:hover { transform: scale(1.05); }
+
+/* El cuadro flotante oculto */
+.quotes-dropdown { 
+    display: none; position: absolute; bottom: 120%; left: 50%; transform: translateX(-50%); 
+    background: var(--bg-card); border: 1px solid var(--ford-blue); border-radius: 8px; 
+    padding: 8px; z-index: 999; box-shadow: var(--shadow-lg); width: max-content; 
+    max-width: 220px; flex-direction: column; gap: 4px; 
+}
+
+/* La flechita apuntando para abajo */
+.quotes-dropdown::after { 
+    content: ''; position: absolute; top: 100%; left: 50%; margin-left: -6px; 
+    border-width: 6px; border-style: solid; border-color: var(--ford-blue) transparent transparent transparent; 
+}
+
+/* Al poner el mouse sobre el wrapper, mostramos el cuadro flotante */
+.quotes-wrapper:hover .quotes-dropdown { display: flex; }
+
+/* Enlaces adentro del cuadro */
+.quote-link { 
+    font-size: 0.75rem; color: var(--text-secondary); text-decoration: none; 
+    padding: 6px; border-bottom: 1px solid var(--border-color); 
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; border-radius: 4px; 
+}
+.quote-link:hover { color: var(--ford-blue); background: var(--ford-light); }
+.quote-link:last-child { border-bottom: none; }
+
+.quotes-summary {
+    padding: 6px;
+    font-size: 0.75rem;
+    color: var(--ford-blue);
+    font-weight: 700;
+    cursor: pointer;
+    list-style: none; /* Ocultar flechita nativa */
+    text-align: center;
+}
+.quotes-summary::-webkit-details-marker { display: none; }
+.badge-count {
+    background: var(--ford-blue);
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 0.65rem;
+}
+.quotes-list {
+    background: var(--bg-card);
+    padding: 5px;
+    border-top: 1px solid var(--ford-light);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 80px;
+    overflow-y: auto;
+}
+.quote-link {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.quote-link:hover { color: var(--ford-blue); text-decoration: underline; }
+
+/* Integración Vendedor Formulario */
+.vendedor-header { background: var(--bg-card); }
+
+/* Corrección de ancho para vistas de Historial */
+#contenedor-lista-historial, #contenedor-calendario {
+    width: 100% !important;
+    max-width: 100%;
+    display: block;
+    clear: both;
+}
+.calendario-grid-dias, .calendario-grid {
+    width: 100%;
+}
+
+
+
+
+
+/* =========================================
+   ADAPTACIÓN DE PLATAFORMA PARA CELULARES
+========================================= */
+@media (max-width: 768px) {
+    /* Los encabezados y filtros se apilan */
+    .header-content { flex-direction: column; gap: 15px; text-align: center; }
+    .header-actions { flex-wrap: wrap; justify-content: center; }
+    .tabs-historial { flex-wrap: wrap; width: 100%; }
+    .tabs-historial button { flex: 1; min-width: 45%; }
+    .filtros-container { flex-direction: column; width: 100%; align-items: stretch; }
+    .filtros-container select, .filtros-container .rango-fechas, .filtros-container button { width: 100%; margin-bottom: 5px; }
+    
+    /* El panel de Admin pasa a 1 sola columna en lugar de 2 */
+    #vista-planes, #vista-circulares { grid-template-columns: 1fr !important; }
+    .grid-inputs { grid-template-columns: 1fr !important; }
+    .dashboard-container { padding: 10px; }
+}

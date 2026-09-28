@@ -1,0 +1,109 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #0f172a;
+    position: relative;
+    overflow-x: hidden;
+}
+
+h1, h2, h3 { font-family: 'Montserrat', sans-serif; }
+
+/* Imagen de fondo espectacular */
+.login-bg {
+    position: absolute;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background-image: url('img/territory.avif'); /* Usamos la foto que ya tenemos */
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.35); /* La oscurecemos para que resalte la tarjeta blanca */
+    z-index: 0;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 440px;
+    padding: 20px;
+    margin: auto; /* Esto fuerza el centrado perfecto */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 10;
+}
+
+/* Base de logos con efecto vidrio */
+.login-logos {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 25px;
+    margin-bottom: 25px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 15px 30px;
+    border-radius: 50px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(4px);
+}
+.logo-dietrich { height: 28px; object-fit: contain; }
+.logo-ovalo { height: 40px; object-fit: contain; }
+
+/* Tarjeta Principal */
+.login-card {
+    background: #ffffff;
+    width: 100%;
+    padding: 40px 35px;
+    border-radius: 16px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+    text-align: center;
+    animation: fadeIn 0.4s ease forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.login-card h2 { color: #003478; font-size: 1.8rem; margin-bottom: 6px; }
+.login-card p { color: #718096; font-size: 0.95rem; margin-bottom: 30px; }
+
+.input-group { margin-bottom: 18px; text-align: left; }
+.input-group label { display: block; font-size: 0.85rem; font-weight: 700; color: #4a5568; margin-bottom: 6px; }
+.input-group input { 
+    width: 100%; padding: 14px; border: 1px solid #cbd5e1; 
+    border-radius: 8px; font-size: 1rem; background: #f8fafc; color: #1a202c;
+    outline: none; transition: 0.2s;
+}
+.input-group input:focus { border-color: #003478; box-shadow: 0 0 0 3px rgba(0, 52, 120, 0.15); background: #ffffff; }
+
+.login-actions { display: flex; justify-content: flex-end; margin-bottom: 25px; }
+.login-actions a { color: #0066d6; font-size: 0.85rem; text-decoration: none; font-weight: 600; }
+.login-actions a:hover { text-decoration: underline; color: #003478; }
+
+.btn-ingresar {
+    width: 100%; padding: 15px; background: #003478; color: white; border: none; 
+    border-radius: 8px; font-size: 1.05rem; font-weight: 700; cursor: pointer; transition: 0.2s;
+}
+.btn-ingresar:hover { background: #00224f; transform: translateY(-2px); }
+.btn-ingresar:disabled { background: #a0aec0; cursor: not-allowed; transform: none; }
+
+.login-footer { margin-top: 25px; font-size: 0.9rem; color: #718096; }
+.login-footer a { color: #003478; font-weight: 800; text-decoration: none; }
+.login-footer a:hover { text-decoration: underline; }
+
+/* Botón WPP */
+.btn-soporte-wpp {
+    margin-top: 30px;
+    background: rgba(0, 0, 0, 0.5); color: white; padding: 10px 24px; 
+    border-radius: 20px; text-decoration: none; font-size: 0.85rem; font-weight: 600;
+    border: 1px solid rgba(255, 255, 255, 0.3); transition: 0.2s;
+    backdrop-filter: blur(4px);
+}
+.btn-soporte-wpp:hover { background: #25D366; border-color: #25D366; transform: scale(1.05); }

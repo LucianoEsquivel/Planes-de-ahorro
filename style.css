@@ -1,0 +1,443 @@
+/* =========================================
+   SISTEMA DE DISEÑO FORD DIETRICH (2026)
+   CSS LIMPIO Y OPTIMIZADO
+========================================= */
+
+:root {
+    /* MODO CLARO (Mejorado - Fondo gris suave y bordes marcados) */
+    --bg-main: #eef2f6;
+    --bg-card: #ffffff;
+    --bg-card-subtle: #f4f7f9;
+    --border-color: #cbd5e1;
+    
+    --text-primary: #1a202c;
+    --text-secondary: #4a5568;
+    --text-muted: #718096;
+    
+    --ford-blue: #003478;
+    --ford-blue-hover: #00224f;
+    --ford-light: #eaf2fb;
+    --ford-accent: #0066d6;
+    
+    --success-green: #25D366;
+    --warning-orange: #c5610f;
+    
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    --shadow-lg: 0 10px 25px rgba(0,0,0,0.12);
+}
+
+[data-theme="dark"] {
+    /* MODO OSCURO */
+    --bg-main: #0f172a;
+    --bg-card: #1e293b;
+    --bg-card-subtle: #243447;
+    --border-color: #334155;
+    
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+
+    --ford-blue: #3b82f6;
+    --ford-blue-hover: #60a5fa;
+    --ford-light: rgba(59, 130, 246, 0.15);
+    --ford-accent: #60a5fa;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* =========================================
+   RESET & BASES
+========================================= */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    line-height: 1.5;
+    padding-bottom: 100px;
+}
+
+h1, h2, h3, h4, strong {
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* =========================================
+   ELEMENTOS GLOBALES Y FLOTANTES
+========================================= */
+/* Loader Fixed */
+#pantalla-carga {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    background-color: #003478;
+    color: #ffffff;
+    text-align: center;
+    padding: 20px;
+    z-index: 9999;
+}
+
+.loader-spinner {
+    width: 45px; height: 45px;
+    border: 4px solid rgba(255,255,255,0.2);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Botón Tema Superior */
+.btn-theme-float {
+    position: fixed;
+    top: 20px; right: 20px;
+    width: 42px; height: 42px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: var(--shadow-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1100;
+}
+
+/* Botones Acción Inferiores */
+.botones-flotantes-bottom {
+    position: fixed;
+    bottom: 20px; left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 15px;
+    z-index: 1000;
+    width: 90%;
+    max-width: 500px;
+    justify-content: center;
+}
+
+.btn-flotante-wpp, .btn-flotante-pdf {
+    flex: 1;
+    padding: 14px 20px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    cursor: pointer;
+    border: none;
+    color: white;
+}
+.btn-flotante-wpp { background: var(--success-green); }
+.btn-flotante-pdf { background: var(--ford-blue); }
+.btn-flotante-wpp:hover, .btn-flotante-pdf:hover { transform: translateY(-3px) scale(1.02); }
+
+/* Modal y Lightbox */
+.lightbox-overlay, .modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+.lightbox-overlay { background: rgba(0,0,0,0.9); z-index: 3000; }
+.modal-overlay { background: rgba(0,0,0,0.6); z-index: 2000; }
+
+.lightbox-overlay img {
+    max-width: 100%; max-height: 90vh;
+    border-radius: 8px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+    object-fit: contain;
+}
+.lightbox-cerrar {
+    position: absolute; top: 20px; right: 30px;
+    color: white; font-size: 3rem; cursor: pointer; font-weight: bold;
+}
+
+.modal-contenido {
+    background: var(--bg-card);
+    border-radius: 12px;
+    max-width: 500px; width: 100%; max-height: 80vh;
+    box-shadow: var(--shadow-lg);
+    display: flex; flex-direction: column;
+    overflow: hidden;
+}
+.modal-header {
+    padding: 15px 20px; border-bottom: 1px solid var(--border-color);
+    display: flex; justify-content: space-between; align-items: center;
+}
+.btn-cerrar-modal { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); }
+.modal-body { padding: 20px; overflow-y: auto; font-size: 0.85rem; color: var(--text-secondary); }
+
+/* =========================================
+   PANEL DEL VENDEDOR (index.html)
+========================================= */
+.contenedor-principal {
+    max-width: 720px;
+    margin: 40px auto; padding: 30px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    box-shadow: var(--shadow-md);
+}
+.contenedor-principal header { text-align: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid var(--border-color); }
+.contenedor-principal header h1 { color: var(--ford-blue); font-size: 1.8rem; margin-bottom: 4px; }
+.contenedor-principal header p { color: var(--text-muted); font-size: 0.95rem; }
+
+.bloque-form {
+    border: 1px solid var(--border-color); border-radius: 12px;
+    padding: 20px; margin-bottom: 20px; background-color: var(--bg-card-subtle);
+}
+.bloque-form legend { background: var(--ford-blue); color: #ffffff; padding: 4px 14px; border-radius: 20px; font-weight: 700; font-size: 0.85rem; }
+.bloque-form label { display: block; margin-top: 14px; margin-bottom: 6px; font-weight: 600; font-size: 0.9rem; color: var(--text-primary); }
+.bloque-form input[type="text"], .bloque-form select, .bloque-form textarea {
+    width: 100%; padding: 12px 14px; background: var(--bg-card); color: var(--text-primary);
+    border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.95rem;
+}
+.bloque-form input[type="text"]:focus, .bloque-form select:focus, .bloque-form textarea:focus { outline: none; border-color: var(--ford-blue); box-shadow: 0 0 0 3px var(--ford-light); }
+.bloque-form input[type="checkbox"] { width: auto; margin-right: 8px; accent-color: var(--ford-blue); cursor: pointer; }
+
+.acciones-finales { display: flex; gap: 15px; background: transparent; border: none; padding: 0; margin-top: 10px; }
+.acciones-finales button { flex: 1; padding: 14px 20px; border: none; border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; }
+.acciones-finales button:active { transform: scale(0.98); }
+#btn-revisar { background-color: var(--border-color); color: var(--text-primary); }
+#btn-generar { background-color: var(--ford-blue); color: #ffffff; }
+
+/* =========================================
+   VISTA DEL CLIENTE: HERO & LAYOUT
+========================================= */
+.hero-propuesta { background: var(--bg-card); border-bottom: 1px solid var(--border-color); }
+.top-nav-bar { max-width: 1200px; margin: 0 auto; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+.logos-brand { display: flex; align-items: center; gap: 20px; }
+.logo-ford { height: 35px; object-fit: contain; }
+.logo-dietrich { height: 28px; object-fit: contain; }
+.badge-validez span { font-size: 0.8rem; background: var(--ford-light); color: var(--ford-blue); padding: 5px 12px; border-radius: 20px; font-weight: 600; }
+
+.hero-media-wrapper {
+    position: relative; max-width: 1200px; margin: 0 auto 20px auto;
+    border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-md);
+}
+.carrusel-track { display: flex; align-items: center; width: 100%; transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1); transform: translateX(8%); }
+.carrusel-slide { flex-shrink: 0; width: 80%; height: 380px; object-fit: cover; border-radius: 16px; margin: 0 2%; opacity: 0.4; transform: scale(0.92); transition: opacity 0.6s ease, transform 0.6s ease; cursor: zoom-in; box-shadow: var(--shadow-md); }
+.carrusel-slide.active { opacity: 1; transform: scale(1); }
+
+.hero-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.85) 100%); padding: 30px 25px 20px 25px; color: #ffffff; pointer-events: none; }
+.tag-exclusivo { font-size: 0.75rem; text-transform: uppercase; background: var(--ford-accent); padding: 4px 8px; border-radius: 4px; font-weight: bold; }
+.hero-overlay h1 { font-size: 2rem; margin-top: 5px; color: #ffffff; }
+.hero-overlay p { color: #e2e8f0; font-size: 0.95rem; }
+
+/* Grid Desktop */
+.main-layout-grid {
+    max-width: 1200px;
+    margin: 60px auto 0 auto; /* Separación amplia de la foto */
+    padding: 0 20px; display: grid; grid-template-columns: 1fr; gap: 20px;
+}
+
+/*@media (min-width: 1024px) {
+    .main-layout-grid { 
+        grid-template-columns: repeat(12, 1fr); 
+        align-items: start; Evita que las tarjetas se estiren a lo alto si una es más corta 
+    }
+    .card-plan { grid-column: span 5; } /* Ocupa 5 columnas de las 12 
+    .card-operacion-cuotas { grid-column: span 7; } /* Ocupa las 7 restantes 
+    .full-width-card { grid-column: span 12; }
+    .card-cuotas, .card-beneficios, .card-pagos, .card-sucursal { grid-column: span 6; }
+} */
+/* Tarjetas Base */
+.card-propuesta { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 14px; padding: 24px; box-shadow: var(--shadow-sm); }
+.card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.card-header.center { text-align: center; flex-direction: column; justify-content: center; }
+.icon-card { font-size: 1.6rem; }
+.card-header h2 { font-size: 1.25rem; color: var(--text-primary); }
+.card-header p { font-size: 0.85rem; color: var(--text-muted); }
+
+/* =========================================
+   DETALLES DE TARJETAS (Plan, Simulador, etc.)
+========================================= */
+/* Plan & Donut */
+.plan-body-grid { display: grid; grid-template-columns: 1fr; gap: 20px; align-items: center; }
+@media (min-width: 600px) { .plan-body-grid { grid-template-columns: 1fr 1fr; } }
+
+.donut-chart-container { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.donut-chart { width: 140px; height: 140px; border-radius: 50%; background: #ccc; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 0 10px rgba(0,0,0,0.1); }
+.donut-inner { width: 95px; height: 95px; background: var(--bg-card); border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.numero-destacado { font-size: 2.2rem !important; font-weight: 800; color: var(--ford-blue); line-height: 1;}
+.donut-inner small { font-size: 0.7rem; color: var(--text-muted); }
+
+.donut-legend p { font-size: 0.85rem; display: flex; align-items: center; gap: 6px; color: var(--text-secondary); }
+.dot-financiado { width: 10px; height: 10px; background: var(--ford-blue); border-radius: 50%; }
+.dot-alicuota { width: 10px; height: 10px; background: var(--warning-orange); border-radius: 50%; }
+.txt-resaltado { font-size: 1rem; color: var(--text-primary); }
+
+.plan-datos-lista { display: flex; flex-direction: column; gap: 12px; }
+.dato-fila { display: flex; justify-content: space-between; padding: 8px 12px; background: var(--bg-card-subtle); border-radius: 8px; font-size: 0.9rem; }
+.dato-fila.destacado { background: var(--ford-blue); color: white; }
+.dato-fila.destacado span, .dato-fila.destacado strong { color: white !important; font-size: 1.1rem; }
+.box-cuota-pura { margin-top: 15px; background: var(--ford-light); border-left: 4px solid var(--ford-blue); padding: 12px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; }
+.box-cuota-pura span { font-weight: 600; color: var(--ford-blue); }
+.box-cuota-pura strong { font-size: 1.4rem; color: var(--ford-blue); }
+
+/* Capital Bar */
+.capital-totales { margin-bottom: 10px; font-size: 0.95rem; }
+.progres-thick { height: 24px !important; border-radius: 12px !important; background: var(--bg-card-subtle); border: 1px solid var(--border-color); position: relative; margin: 8px 0;}
+.animated-fill { height: 100%; border-radius: 12px; transition: width 1.2s cubic-bezier(0.25, 1, 0.5, 1); background: linear-gradient(90deg, var(--ford-blue) 0%, var(--ford-accent) 100%); }
+.progreso-flotante { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: white; font-weight: bold; font-size: 0.75rem; }
+.marker-alicuota { position: absolute; top: -5px; bottom: -5px; width: 4px; background: var(--warning-orange); border-radius: 2px; z-index: 10; transition: left 1s ease; }
+.meta-flotante { position: absolute; top: -22px; left: 50%; transform: translateX(-50%); background: var(--warning-orange); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; }
+.progress-bar-labels { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); }
+
+.badge-alerta { background: var(--ford-light); color: var(--ford-blue); padding: 8px 12px; border-radius: 6px; font-size: 0.85rem; }
+.txt-recomendacion { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.4; }
+.nota-usado { background: var(--bg-card-subtle); border-left: 3px solid var(--warning-orange); padding: 10px; font-size: 0.85rem; border-radius: 4px; }
+.nota-asesor-box { background: var(--bg-card-subtle); border-left: 3px solid var(--ford-blue); padding: 10px; font-size: 0.85rem; border-radius: 4px; }
+
+/* Simulador Range */
+.simulador-grid-content { display: grid; grid-template-columns: 1fr; gap: 20px; }
+@media (min-width: 768px) { .simulador-grid-content { grid-template-columns: 1.5fr 1fr; align-items: center; } }
+.monto-display { font-size: 1.2rem; margin-bottom: 10px; }
+.monto-display strong { color: var(--ford-blue); font-size: 1.5rem; }
+input[type=range] { width: 100%; height: 8px; border-radius: 5px; background: var(--border-color); outline: none; margin: 15px 0; }
+.simulador-kpi-result { display: flex; gap: 15px; }
+.kpi-card { flex: 1; background: var(--bg-card-subtle); border: 1px solid var(--border-color); padding: 15px; border-radius: 10px; text-align: center; }
+.kpi-card strong { display: block; font-size: 1.8rem; color: var(--text-primary); }
+.kpi-card.highlight { background: var(--ford-light); border-color: var(--ford-blue); }
+.kpi-card.highlight strong { color: var(--ford-blue); }
+
+/* Cuotas */
+.cuota-hero-box { background: var(--ford-light); border: 1px solid var(--ford-blue); padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 15px; }
+.cuota-gigante { display: block; font-size: 2.8rem !important; color: var(--ford-accent) !important; margin: 5px 0; }
+.disclaimer-cuota, .disclaimer-slider { color: var(--text-muted); font-size: 0.8rem; }
+.btn-toggle-tabla { width: 100%; padding: 10px; background: transparent; border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 6px; font-weight: 600; cursor: pointer; }
+.table-moderna { border-collapse: separate; border-spacing: 0; width: 100%; }
+.table-moderna th { background: var(--bg-card-subtle); color: var(--text-muted); text-transform: uppercase; font-size: 0.75rem; padding: 12px; border-bottom: 2px solid var(--border-color); }
+.table-moderna td { padding: 15px 12px; border-bottom: 1px solid var(--border-color); font-size: 0.95rem; color: var(--text-secondary); }
+.alinear-derecha { text-align: right !important; }
+.precio-tabla { font-weight: 700; color: var(--text-primary) !important; font-size: 1.1rem !important; }
+
+/* Beneficios */
+.grid-beneficios-tags { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
+.grid-beneficios-tags li { background: var(--bg-card-subtle); border: 1px solid var(--border-color); padding: 10px 14px; border-radius: 8px; font-size: 0.9rem; }
+.btn-link-legales { background: none; border: none; color: var(--ford-blue); text-decoration: underline; font-size: 0.85rem; cursor: pointer; }
+
+/* Stepper 5 Pasos */
+.stepper-horizontal { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 15px; }
+@media (min-width: 768px) { .stepper-horizontal { grid-template-columns: repeat(5, 1fr); } }
+.step-item { background: var(--bg-card-subtle); padding: 15px; border-radius: 10px; border: 1px solid var(--border-color); text-align: center; }
+.step-circle { width: 32px; height: 32px; background: var(--ford-blue); color: white; border-radius: 50%; margin: 0 auto 10px auto; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+.step-item h4 { font-size: 0.95rem; margin-bottom: 5px; color: var(--text-primary); }
+.step-item p { font-size: 0.75rem; color: var(--text-muted); }
+
+/* Ecosistema Reducido */
+.grid-links-ecosistema { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
+.square-card {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+    width: 150px; height: 150px; padding: 15px;
+    background: var(--bg-card-subtle); border: 1px solid var(--border-color); border-radius: 12px; text-decoration: none; transition: transform 0.2s, border-color 0.2s;
+}
+.square-card:hover { transform: translateY(-5px); border-color: var(--ford-blue); }
+.square-card .icon-link, .square-card .logo-ecosistema { height: 35px; margin-bottom: 10px; font-size: 2.2rem; object-fit: contain; }
+.square-card strong { font-size: 0.85rem; color: var(--text-primary); margin-bottom: 4px; display: block;}
+.square-card small { font-size: 0.7rem; color: var(--text-muted); line-height: 1.2; }
+
+/* Video Spot */
+.video-container { position: relative; width: 100%; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden; background: #000; box-shadow: var(--shadow-sm); }
+.video-container iframe { width: 100%; height: 100%; border: none; display: block; }
+
+/* Pagos */
+.medios-pago-grid { display: flex; flex-direction: column; gap: 8px; }
+.medio-item { padding: 10px; background: var(--bg-card-subtle); border-radius: 6px; font-size: 0.85rem; }
+
+/* Asesor */
+.card-asesor { background: var(--ford-light); border-color: var(--ford-blue); }
+.asesor-perfil-grid { display: flex; align-items: center; gap: 20px; }
+.asesor-avatar { width: 70px; height: 70px; background: #ffffff; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: var(--shadow-sm); }
+.asesor-info p { margin-bottom: 3px; color: var(--text-secondary); font-size: 0.9rem;}
+.asesor-info .asesor-label { font-size: 0.75rem; color: var(--ford-blue); text-transform: uppercase; font-weight: bold; margin-bottom: 0;}
+.asesor-info h3 { margin-bottom: 5px; color: var(--text-primary); font-size: 1.2rem;}
+
+/* =========================================
+   CORRECCIONES DE ESCRITORIO (PC)
+========================================= */
+@media (min-width: 1024px) {
+    /* Layout en 2 columnas perfectas */
+    .main-layout-grid { 
+        grid-template-columns: repeat(12, 1fr); 
+        align-items: start; 
+    }
+    .card-plan { grid-column: span 5; } 
+    .card-operacion-cuotas { grid-column: span 7; }
+    .full-width-card { grid-column: span 12; }
+    .card-cuotas, .card-pagos, .card-sucursal { grid-column: span 6; }
+    /* Los beneficios ocupan TODO el ancho (las 12 columnas) */
+    .card-beneficios { grid-column: span 12; }
+    
+    /* Y dividimos la lista en 2 columnas estilo grilla */
+    .grid-beneficios-tags {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 15px;
+    }
+    
+    /* Solución al desborde ("se rompe bastante") y al "hueco enorme" */
+    .plan-body-grid {
+        grid-template-columns: 1fr !important;
+        gap: 30px;
+        padding-top: 15px;
+    }
+    .donut-chart-container { margin-bottom: 10px; }
+
+    /* Ocultar cuotas extra en PC */
+    .tr-hide-pc { display: none !important; }
+    
+    /* Mostrar botón de Ver Más en PC */
+    .btn-ver-cuotas-pc { 
+        display: block !important; 
+        width: 100%; 
+        background: var(--bg-subtle); 
+        color: var(--ford-blue); 
+        border: 1px dashed var(--ford-blue); 
+        padding: 12px; 
+        border-radius: 8px; 
+        font-weight: bold; 
+        margin-top: 15px; 
+        cursor: pointer;
+        transition: 0.2s;
+    }
+    .btn-ver-cuotas-pc:hover { 
+        background: var(--ford-blue); 
+        color: white; 
+    }
+}
+
+/* =========================================
+   CORRECCIONES PARA MÓVIL (Celular)
+========================================= */
+@media (max-width: 1023px) {
+    /* En celular la tabla se muestra completa, sin botón ni modal */
+    .tr-hide-pc { display: table-row !important; }
+    .btn-ver-cuotas-pc { display: none !important; }
+}

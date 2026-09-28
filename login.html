@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso CRM | Ford Dietrich</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="login.css">
+    <link rel="manifest" href="manifest.json">
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+    </script>
+</head>
+<body>
+    
+    <!-- Imagen de fondo corporativa oscurecida -->
+    <div class="login-bg"></div>
+
+    <div class="login-container">
+        
+        <!-- Logos -->
+        <div class="login-logos">
+            <img src="img/dietrich.png" alt="Grupo Dietrich" class="logo-dietrich">
+            <img src="img/logo plan ovalo azul.png" alt="Plan Óvalo" class="logo-ovalo" onerror="this.src='img/ford.png'">
+        </div>
+
+        <!-- TARJETA 1: INICIAR SESIÓN -->
+        <div class="login-card" id="card-login">
+            <h2>Iniciar Sesión</h2>
+            <p>Acceso exclusivo para asesores comerciales</p>
+            
+            <form id="form-login">
+                <div class="input-group">
+                    <label>Correo Electrónico</label>
+                    <input type="email" id="login-email" placeholder="ejemplo@ejemplo.com" required>
+                </div>
+                <div class="input-group">
+                    <label>Contraseña</label>
+                    <input type="password" id="login-password" placeholder="••••••••" required>
+                </div>
+                
+                <div class="login-actions">
+                    <a href="#" id="btn-olvide-pass">¿Olvidaste tu contraseña?</a>
+                </div>
+
+                <button type="submit" class="btn-ingresar" id="btn-submit-login">Ingresar al Sistema</button>
+            </form>
+
+            <div class="login-footer">
+                <p>¿No tenés cuenta? <a href="#" id="link-crear">Registrarme</a></p>
+            </div>
+        </div>
+
+        <!-- TARJETA 2: CREAR CUENTA (Restringida por dominio) -->
+        <div class="login-card" id="card-registro" style="display: none;">
+            <h2>Registro de Asesor</h2>
+            
+            <form id="form-registro">
+                <div class="input-group">
+                    <label>Nombre y Apellido</label>
+                    <input type="text" id="reg-nombre" placeholder="Ej: Juan Pérez" required>
+                </div>
+                <div class="input-group">
+                    <label>Correo Electrónico</label>
+                    <input type="email" id="reg-email" placeholder="ejemplo@ejemplo.com" required>
+                </div>
+                <div class="input-group">
+                    <label>Crear Contraseña</label>
+                    <input type="password" id="reg-password" placeholder="Mínimo 6 caracteres" required minlength="6">
+                </div>
+
+                <div class="input-group">
+                    <label>Confirmar Contraseña</label>
+                    <input type="password" id="reg-password-confirm" placeholder="Repetir contraseña" required minlength="6">
+                </div>
+
+                <button type="submit" class="btn-ingresar" id="btn-submit-reg">Verificar y Crear Cuenta</button>
+            </form>
+
+            <div class="login-footer">
+                <p>¿Ya tenés cuenta? <a href="#" id="link-volver-login">Volver a ingresar</a></p>
+            </div>
+        </div>
+
+        <!-- Botón de Soporte WPP Flotante abajo -->
+        <a href="https://wa.me/5492804006499?text=Hola,%20necesito%20soporte%20con%20el%20acceso%20al%20CRM%20Dietrich" target="_blank" class="btn-soporte-wpp">
+             Consultas tecnicas
+        </a>
+
+    </div>
+
+    <script type="module" src="login.js"></script>
+</body>
+</html> 

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo de Planes | Ford Dietrich</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="catalogo.css">
+    <!-- Script Anti-Flash Modo Oscuro -->
+    <script>
+        const theme = localStorage.getItem('theme_dietrich') || 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+    </script>
+    <link rel="manifest" href="manifest.json">
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+    </script>
+</head>
+<body>
+
+    <!-- BARRA SUPERIOR (HEADER) -->
+    <header class="catalogo-header">
+        <div class="header-content">
+            <div class="header-logos">
+                <img src="img/dietrich.png" alt="Dietrich" class="logo-dietrich">
+                <img src="img/ford.png" alt="Ford" class="logo-ford">
+            </div>
+
+            <div class="header-actions">
+                <!-- NUEVO BOTÓN OCULTO POR DEFECTO -->
+                <button type="button" id="btn-panel-admin" class="btn-header-action" style="display: none; background: var(--warning-orange); color: white; border: none;">⚙️ Panel Admin</button>
+                
+                <button type="button" id="btn-vista-historial" class="btn-header-action">Historial</button>
+                <button type="button" id="btn-vista-catalogo" class="btn-header-action" style="display: none;">Catálogo</button>
+                <button type="button" id="btn-modal-circulares" class="btn-header-action" title="Documentos y Circulares">Circulares</button>
+                <button type="button" id="btn-ajustes" class="btn-icon-action" title="Ajustes de Perfil" onclick="document.getElementById('modal-ajustes').style.display='flex'">⚙️</button>
+                <div class="user-badge" id="btn-user-profile">
+                    <span class="avatar-circle">👤</span>
+                    <span id="header-user-name">Juan Pérez</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTENEDOR PRINCIPAL -->
+    <main class="catalogo-container">
+        
+        <!-- VISTA 1: CATÁLOGO DE PLANES -->
+        <div id="vista-catalogo">
+            <section class="catalogo-hero">
+                <h1>Catálogo de Planes</h1>
+                <p>Seleccioná la unidad base para generar una cotización digital</p>
+            </section>
+
+            <section class="grid-catalogo" id="grid-planes"></section>
+        </div>
+
+        <!-- VISTA 2: HISTORIAL DE COTIZACIONES -->
+        <div id="vista-historial" style="display: none;">
+            <section class="catalogo-hero" style="margin-bottom: 20px;">
+                <h1>Historial y Gestión</h1>
+                <p>Registro de propuestas generadas</p>
+            </section>
+
+            <!-- TABS Y FILTROS -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+                <div class="tabs-historial" style="margin-bottom: 0;">
+                    <button id="btn-tab-lista" class="tab-activa"> Vista Lista</button>
+                    <button id="btn-tab-calendario"> Vista Calendario</button>
+                </div>
+                
+                <!-- Filtros para la vista lista -->
+                <div id="filtros-lista" class="filtros-container">
+
+                    <div id="filtros-lista" class="filtros-container">
+                    
+                    <!-- NUEVO FILTRO (Oculto por defecto para los vendedores) -->
+                    <select id="filtro-vendedor" class="input-filtro" style="display: none;">
+                        <option value="">👤 Todos los asesores</option>
+                    </select>
+
+                    <select id="filtro-plan" class="input-filtro">
+                        <option value="">Todos los planes</option>
+                    </select>
+                    
+                    <div class="rango-fechas">
+                        <input type="date" id="filtro-fecha-desde" class="input-filtro" title="Fecha Desde">
+                        <span class="separador-fecha">-</span>
+                        <input type="date" id="filtro-fecha-hasta" class="input-filtro" title="Fecha Hasta">
+                    </div>
+
+                    <button id="btn-limpiar-filtros" class="btn-limpiar">Limpiar</button>
+                </div>
+            </div>
+            
+            <!-- VISTA LISTA -->
+            <div id="contenedor-lista-historial" class="card-historial">
+                <div class="table-responsive">
+                    <table class="tabla-crm">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Cliente</th>
+                                <th>Vehículo / Plan</th>
+                                <th>Capital</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-historial">
+                            <tr><td colspan="6" style="text-align: center; padding: 20px;">Cargando historial...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="paginacion-crm">
+                    <button id="btn-prev-page" disabled>⬅️ Anterior</button>
+                    <span id="page-indicator">Página 1</span>
+                    <button id="btn-next-page" disabled>Siguiente ➡️</button>
+                </div>
+            </div>
+
+            <!-- VISTA CALENDARIO -->
+            <div id="contenedor-calendario" style="display: none;">
+                <div class="calendario-header">
+                    <button id="btn-cal-prev">◀ Mes Anterior</button>
+                    <h3 id="mes-anio-calendario">Mes Año</h3>
+                    <button id="btn-cal-next">Mes Siguiente ▶</button>
+                </div>
+                <div class="calendario-grid-dias">
+                    <div class="cal-day-name">Dom</div><div class="cal-day-name">Lun</div>
+                    <div class="cal-day-name">Mar</div><div class="cal-day-name">Mié</div>
+                    <div class="cal-day-name">Jue</div><div class="cal-day-name">Vie</div>
+                    <div class="cal-day-name">Sáb</div>
+                </div>
+                <div class="calendario-grid" id="calendario-dias">
+                    <!-- Días inyectados dinámicamente -->
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- MODAL DE AJUSTES Y PERFIL -->
+    <div id="modal-ajustes" class="modal-overlay" style="display: none;">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>⚙️ Configuración de Perfil</h3>
+                <button type="button" id="btn-cerrar-ajustes" class="btn-close">&times;</button>
+            </div>
+            <form id="form-ajustes" class="modal-body">
+                <div class="campo-grupo">
+                    <label for="ajuste-nombre">Nombre y Apellido:</label>
+                    <input type="text" id="ajuste-nombre" value="Juan Pérez" required>
+                </div>
+                <div class="campo-grupo">
+                    <label for="ajuste-email">Correo Electrónico:</label>
+                    <input type="email" id="ajuste-email" value="jperez@dietrich.com.ar" required>
+                </div>
+                <div class="campo-grupo">
+                    <label for="ajuste-tel">Teléfono / WhatsApp de Contacto:</label>
+                    <input type="text" id="ajuste-tel" value="+54 9 11 1234-5678" required>
+                </div>
+                <div class="campo-grupo">
+                    <label for="ajuste-password">Nueva Contraseña (Opcional):</label>
+                    <input type="password" id="ajuste-password" placeholder="Escribí tu nueva clave">
+                </div>
+                <div class="campo-grupo">
+                    <label for="ajuste-password-confirm">Confirmar Nueva Contraseña:</label>
+                    <input type="password" id="ajuste-password-confirm" placeholder="Repetí tu nueva clave">
+                </div>
+                <hr class="divider">
+
+                <div class="campo-tema">
+                    <div>
+                        <strong>Modo Oscuro</strong>
+                        <p>Reducí el brillo de pantalla para trabajar de noche</p>
+                    </div>
+                    <button type="button" id="toggle-dark-mode" class="btn-theme-toggle">🌙 Cambiar</button>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="submit" class="btn-guardar-perfil">Guardar Cambios</button>
+                    <button type="button" id="btn-cerrar-sesion" style="width: 100%; margin-top: 12px; padding: 12px; background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s;">Cerrar Sesión</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DE CIRCULARES Y DOCUMENTOS -->
+    <div id="modal-circulares" class="modal-overlay" style="display: none;">
+        <div class="modal-card modal-lg">
+            <div class="modal-header">
+                <h3>📄 Circulares y Documentación Útil</h3>
+                <button type="button" id="btn-cerrar-circulares" class="btn-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <ul class="lista-circulares">
+                    <li class="circular-item">
+                        <div>
+                            <strong>Circular VM 073/2026</strong>
+                            <p>Condiciones y escala de cuotas para Ranger XL y Territory.</p>
+                        </div>
+                        <a href="#" class="btn-descargar-doc" onclick="alert('Abriendo documento oficial...');">Abrir PDF</a>
+                    </li>
+                    <li class="circular-item">
+                        <div>
+                            <strong>Bases Comerciales Bono Dietrich</strong>
+                            <p>Descuentos aplicables en cuotas 2 a 12 sobre planes vigentes.</p>
+                        </div>
+                        <a href="#" class="btn-descargar-doc" onclick="alert('Abriendo documento oficial...');">Abrir PDF</a>
+                    </li>
+                    <li class="circular-item">
+                        <div>
+                            <strong>Manual de Integración Plan Óvalo</strong>
+                            <p>Procedimiento de solicitud de scoring y adhesión a débito.</p>
+                        </div>
+                        <a href="#" class="btn-descargar-doc" onclick="alert('Abriendo documento oficial...');">Abrir PDF</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="catalogo.js"></script>
+</body>
+</html>

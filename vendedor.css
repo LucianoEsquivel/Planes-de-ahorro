@@ -1,0 +1,191 @@
+/* =========================================
+   DISEÑO NATIVO DE ESCRITORIO - CRM VENDEDOR
+========================================= */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    background-color: var(--bg-main, #f0f2f5);
+    color: var(--text-primary, #333);
+}
+
+/* Header Banner */
+.vendedor-header {
+    background: var(--bg-card, #ffffff);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    border-bottom: 2px solid var(--border-color, #e2e8f0);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.panel-card, .plan-selector-card {
+    background: var(--bg-card, #ffffff);
+    border: 1px solid var(--border-color, #e2e8f0);
+    color: var(--text-primary, #333);
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+}
+
+.header-logos { display: flex; gap: 20px; align-items: center;}
+.header-logos .logo { height: 35px; object-fit: contain; }
+
+.header-title { text-align: center; }
+.header-title h1 { color: #003478; font-family: 'Montserrat', sans-serif; font-size: 1.5rem; margin-bottom: 3px; }
+.header-title p { font-size: 0.85rem; color: #666; text-transform: uppercase; letter-spacing: 1px;}
+
+.header-user { font-weight: 500; color: #003478; background: #eaf2fb; padding: 8px 15px; border-radius: 20px;}
+
+/* Layout Principal */
+.dashboard-container {
+    max-width: 1300px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+.grid-2-columnas {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    align-items: start;
+}
+
+/* Tarjetas */
+.panel-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+}
+
+.plan-selector-card {
+    border-left: 5px solid var(--ford-blue, #003478);
+}
+
+.plan-selector-card label { font-size: 1.1rem; font-weight: bold; color: #003478; display: block; margin-bottom: 10px; }
+.plan-selector-card select { font-size: 1.1rem; padding: 12px; border-color: #003478;}
+
+legend {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--ford-blue, #003478);
+    margin-bottom: 25px; 
+    display: block;
+    width: 100%;
+    border-bottom: 1px solid var(--border-color, #eee);
+    padding-bottom: 12px;
+}
+
+/* Formularios */
+label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 6px; color: #444; }
+.checkbox-label { display: flex; align-items: center; cursor: pointer; font-weight: 500;}
+.checkbox-label input { margin-right: 8px; width: 16px; height: 16px;}
+.mt-15 { margin-top: 15px; }
+
+input[type="text"], input[type="number"], input[type="date"], select, textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color, #cbd5e1);
+    border-radius: 6px;
+    font-size: 0.95rem;
+    background: var(--bg-subtle, #f8fafc);
+    color: var(--text-primary, #333);
+    transition: border 0.2s;
+    margin-bottom: 10px;
+}
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--ford-blue, #003478);
+    background: var(--bg-card, #fff);
+}
+
+/* =========================================
+   SOPORTE DE MODO OSCURO PARA VENDEDOR
+   ========================================= */
+
+[data-theme="dark"] body {
+    background-color: var(--bg-main, #0f172a);
+    color: var(--text-primary, #f8fafc);
+}
+
+[data-theme="dark"] .vendedor-header {
+    background: var(--bg-card, #1e293b);
+    border-bottom: 2px solid var(--border-color, #334155);
+}
+
+[data-theme="dark"] .panel-card, 
+[data-theme="dark"] .plan-selector-card {
+    background: var(--bg-card, #1e293b) !important;
+    border: 1px solid var(--border-color, #334155) !important;
+    color: var(--text-primary, #f8fafc) !important;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+[data-theme="dark"] legend,
+[data-theme="dark"] .plan-selector-card label,
+[data-theme="dark"] .contenedor-principal header h1 {
+    color: var(--ford-accent, #60a5fa) !important;
+    border-bottom-color: var(--border-color, #334155);
+}
+
+[data-theme="dark"] label {
+    color: var(--text-secondary, #cbd5e1) !important;
+}
+
+[data-theme="dark"] input[type="text"], 
+[data-theme="dark"] input[type="number"], 
+[data-theme="dark"] input[type="date"], 
+[data-theme="dark"] select, 
+[data-theme="dark"] textarea {
+    background: var(--bg-subtle, #243447) !important;
+    border: 1px solid var(--border-color, #334155) !important;
+    color: var(--text-primary, #f8fafc) !important;
+}
+
+[data-theme="dark"] input:focus, 
+[data-theme="dark"] select:focus, 
+[data-theme="dark"] textarea:focus {
+    border-color: var(--ford-blue, #3b82f6) !important;
+    background: var(--bg-card, #1e293b) !important;
+}
+
+[data-theme="dark"] .beneficios-grid {
+    background: var(--bg-subtle, #243447) !important;
+    border: 1px solid var(--border-color, #334155) !important;
+    color: var(--text-primary, #f8fafc);
+}
+
+[data-theme="dark"] .header-user {
+    background: var(--ford-light, rgba(59, 130, 246, 0.15));
+    color: var(--ford-accent, #60a5fa);
+}
+
+.grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 15px;}
+.beneficios-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #eee;}
+
+/* Botones Finales */
+.acciones-finales { display: flex; gap: 15px; margin-top: 20px;}
+button { padding: 16px 24px; border: none; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 700; cursor: pointer; transition: transform 0.1s, opacity 0.2s; flex: 1;}
+button:active { transform: scale(0.98); }
+.btn-secundario { background: #e2e8f0; color: #333;}
+.btn-primario { background: #003478; color: #fff; box-shadow: 0 4px 12px rgba(0, 52, 120, 0.3);}
+.btn-primario:hover { opacity: 0.9;}
+
+
+
+@media (max-width: 768px) {
+    /* El formulario del cotizador pasa de 2 columnas a 1 sola */
+    .grid-2-columnas { grid-template-columns: 1fr !important; }
+}
+
+

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotizador Digital | Ford Dietrich</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="catalogo.css">
+    <link rel="stylesheet" href="vendedor.css">
+    <script>
+        const theme = localStorage.getItem('theme_dietrich') || 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+    </script>
+</head>
+<body>
+    <!-- BARRA SUPERIOR UNIFICADA -->
+    <header class="catalogo-header">
+        <div class="header-content">
+            <div class="header-logos">
+                <img src="img/dietrich.png" alt="Dietrich" class="logo-dietrich">
+                <img src="img/ford.png" alt="Ford" class="logo-ford">
+            </div>
+            <div class="header-actions">
+                <a href="catalogo.html" class="btn-header-action" style="text-decoration: none;">Volver al Catálogo</a>
+                <button type="button" id="toggle-dark-mode-cotizador" class="btn-icon-action" title="Cambiar Tema">🌙</button>
+                <div class="user-badge">
+                    <span class="avatar-circle">👤</span>
+                    <span id="header-user-name">Cargando...</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard-container">
+        
+        <!-- BANNER DEL PLAN SELECCIONADO -->
+        <div class="panel-card plan-selector-card" id="banner-plan-seleccionado">
+            <div>
+                <span style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); font-weight: bold;">Unidad seleccionada para cotizar:</span>
+                <h2 id="txt-nombre-plan-activo" style="color: var(--ford-blue); font-size: 1.4rem; margin-top: 2px;">Cargando plan...</h2>
+            </div>
+            <input type="hidden" id="plan-base">
+        </div>
+
+        <form id="formulario-cotizador" class="grid-2-columnas">
+            
+            <!-- COLUMNA IZQUIERDA -->
+            <div class="columna">
+                <fieldset class="panel-card">
+                    <legend>1. Datos del Cliente</legend>
+                    <label for="nombre-cliente">Nombre del cliente:</label>
+                    <input type="text" id="nombre-cliente" placeholder="Ej: Fernando" required>
+
+                    <label for="capital-cliente">Capital disponible ($):</label>
+                    <input type="text" id="capital-cliente" placeholder="Ej: $15.000.000" required>
+
+                    <label class="checkbox-label mt-15">
+                        <input type="checkbox" id="entrega-usado">
+                        El cliente entrega vehículo usado en parte de pago
+                    </label>
+                    <input type="text" id="detalle-usado" placeholder="Ej: Focus 2018 SE (Indicar KMs aprox)" style="display: none;">
+                </fieldset>
+
+                <fieldset class="panel-card">
+                    <legend>2. Vehículo a Retirar</legend>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="mantiene-version" checked>
+                        Mantiene modelo y versión del plan
+                    </label>
+                    
+                    <div id="box-cambio-modelo" style="display: none; margin-top: 15px;">
+                        <div class="grid-inputs">
+                            <div>
+                                <label for="select-vehiculo">Vehículo:</label>
+                                <select id="select-vehiculo">
+                                    <option value="" disabled selected>Elegir...</option>
+                                    <option value="Ranger">Ranger</option>
+                                    <option value="Territory">Territory</option>
+                                    <option value="Everest">Everest</option>
+                                    <option value="Maverick">Maverick</option>
+                                    <option value="Bronco">Bronco</option>
+                                    <option value="Transit">Transit</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="select-version">Versión:</label>
+                                <select id="select-version" disabled>
+                                    <option value="">Seleccione vehículo primero</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <!-- COLUMNA DERECHA -->
+            <div class="columna">
+                <fieldset class="panel-card">
+                    <legend>3. Estrategia y Beneficios</legend>
+
+                    <!-- CAJA MODO GERENCIA: ASIGNAR VENDEDOR -->
+                    <div id="box-asignar-vendedor" style="display: none; margin-bottom: 15px; padding: 12px; background: var(--ford-light); border: 1px solid var(--ford-blue); border-radius: 8px;">
+                        <label for="select-vendedor-asignado" style="color: var(--ford-blue); font-weight: bold;">Asignar a Asesor:</label>
+                        <select id="select-vendedor-asignado" style="margin-bottom: 0;">
+                            <option value="yo">Asignar a</option>
+                        </select>
+                    </div>
+
+                    <div class="grid-inputs">
+                        <div>
+                            <label for="fecha-vigencia">Vigencia de la propuesta:</label>
+                            <input type="date" id="fecha-vigencia" required>
+                        </div>
+                    </div>
+
+                    <label class="checkbox-label mt-15">
+                        <input type="checkbox" id="incluir-cuota1">
+                        Incluir Cuota 1 en el resumen financiero
+                    </label>
+                    <div id="box-valor-cuota1" style="display: none; margin-top: 10px;">
+                        <label for="valor-cuota1">Valor exacto a cobrar Cuota 1 ($):</label>
+                        <input type="text" id="valor-cuota1" placeholder="Ej: $ 250.000">
+                    </div>
+
+                    <p class="mt-15" style="font-weight: 600; font-size: 0.9rem;">Beneficios Oficiales:</p>
+                    
+                    <div class="beneficios-grid">
+                        <!-- JS inyecta los beneficios acá -->
+                    </div>
+
+                    <!-- CAJA MODO GERENCIA: INVENTAR BENEFICIO -->
+                    <div id="box-beneficio-extra" style="display: none; margin-top: 15px; padding: 12px; background: var(--ford-light); border: 1px dashed var(--ford-blue); border-radius: 8px;">
+                        <p style="color: var(--ford-blue); font-weight: bold; font-size: 0.85rem; margin-bottom: 8px;">Agregar Beneficio Especial (Solo Gerencia):</p>
+                        <input type="text" id="extra-ben-titulo" placeholder="Ej: Tuercas de seguridad gratis" style="width: 100%; margin-bottom: 8px; padding: 8px; border-radius: 4px; border: 1px solid var(--border-color); font-size: 0.85rem; background: var(--bg-card); color: var(--text-primary);">
+                        <textarea id="extra-ben-legal" rows="2" placeholder="Texto legal o detalle del beneficio..." style="width: 100%; margin-bottom: 8px; padding: 8px; border-radius: 4px; border: 1px solid var(--border-color); font-size: 0.85rem; resize: vertical; background: var(--bg-card); color: var(--text-primary);"></textarea>
+                        <button type="button" id="btn-add-extra-ben" class="btn-secundario" style="width: 100%; padding: 8px; font-size: 0.85rem; font-weight: bold;">+ Sumar a la lista oficial</button>
+                    </div>
+
+                    <label for="comentarios-vendedor" class="mt-15">Comentarios / Promesas al cliente:</label>
+                    <textarea id="comentarios-vendedor" rows="3" placeholder="Ej: Te tomo el usado a buen precio..."></textarea>
+                </fieldset>
+
+                <div class="acciones-finales">
+                    <button type="button" id="btn-revisar" class="btn-secundario">Revisar Propuesta</button>
+                    <button type="submit" id="btn-generar" class="btn-primario">🔗 Generar Link y Guardar</button>
+                </div>
+            </div>
+        </form>
+
+    </main>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>

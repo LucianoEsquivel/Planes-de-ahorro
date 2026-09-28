@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración | Ford Dietrich</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="catalogo.css">
+    <link rel="stylesheet" href="vendedor.css">
+    <script>
+        const theme = localStorage.getItem('theme_dietrich') || 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+    </script>
+</head>
+<body>
+
+    <!-- BARRA SUPERIOR -->
+    <header class="catalogo-header">
+        <div class="header-content">
+            <div class="header-logos">
+                <img src="img/dietrich.png" alt="Dietrich" class="logo-dietrich">
+                <span style="font-weight: bold; color: var(--warning-orange); margin-left: 10px;">PANEL ADMIN / SUPERVISOR</span>
+            </div>
+            <div class="header-actions">
+                <a href="catalogo.html" class="btn-header-action" style="text-decoration: none;">Ir al Catálogo</a>
+                <button type="button" id="toggle-dark-mode" class="btn-icon-action" title="Cambiar Tema">🌙</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard-container" style="max-width: 1400px;">
+        
+        <!-- PESTAÑAS DE NAVEGACIÓN -->
+        <div style="display: flex; gap: 15px; margin-bottom: 25px; border-bottom: 2px solid var(--border-color); padding-bottom: 15px;">
+            <button id="btn-tab-planes" class="btn-primario" style="flex: unset; padding: 10px 20px;">Gestión de Planes</button>
+            <button id="btn-tab-circulares" class="btn-secundario" style="flex: unset; padding: 10px 20px;">Circulares y PDFs</button>
+            <button id="btn-tab-equipo" class="btn-secundario" style="flex: unset; padding: 10px 20px;">Gestión de Equipo</button>
+        </div>
+
+        <!-- VISTA 1: GESTIÓN DE PLANES -->
+        <div id="vista-planes" style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 30px;">
+            <div class="columna">
+                <div class="panel-card">
+                    <legend>Planes Activos</legend>
+                    <div id="lista-planes-admin" style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                        <p style="text-align: center; color: var(--text-muted);">Cargando planes...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="columna">
+                <form id="form-plan" class="panel-card">
+                    <legend id="titulo-formulario">Crear Nuevo Plan</legend>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <label>ID Corto del Plan (Ej: Maverick XLT 100)</label>
+                        <input type="text" id="plan-id" required placeholder="Será el nombre interno en la base de datos" style="width: 100%; padding: 12px 14px; background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 8px;">
+                    </div>
+
+                    <!-- CAJA MULTIMEDIA (OCULTA POR DEFECTO, SOLO PARA EL ADMIN) -->
+                    <div id="box-media-admin" style="display: none; margin-bottom: 15px; padding: 15px; background: var(--ford-light); border: 1px dashed var(--ford-blue); border-radius: 8px;">
+                        <p style="color: var(--ford-blue); font-weight: bold; font-size: 0.85rem; margin-bottom: 10px;">Carga Multimedia:</p>
+                        <div class="grid-inputs">
+                            <div>
+                                <label>Rutas de las Fotos (Separadas por coma)</label>
+                                <input type="text" id="plan-foto" placeholder="Ej: img/frente.jpg, img/interior.jpg" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color);">
+                            </div>
+                            <div>
+                                <label>ID del Video de YouTube</label>
+                                <input type="text" id="plan-video" placeholder="Ej: T6sp7XvOhTM" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color);">
+                            </div>
+                        </div>
+                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 5px;">*Si dejás esto en blanco, se mantendrán las fotos/videos que el auto ya tenga.</p>
+                    </div>
+
+                    <label>Nombre Completo (Título visible)</label>
+                    <input type="text" id="plan-nombre" required>
+                    
+                    <div class="grid-inputs" style="margin-top: 15px;">
+                        <div><label>Precio de Lista ($)</label><input type="number" id="plan-precio" required></div>
+                        <div><label>Monto Financiado ($)</label><input type="number" id="plan-financiado" required></div>
+                        <div><label>Alícuota Extra / Anticipo ($)</label><input type="number" id="plan-alicuota" required></div>
+                        <div><label>Cuota Pura ($)</label><input type="number" id="plan-cuotapura" required></div>
+                        <div><label>Cuota 1 (Suscripción $)</label><input type="number" id="plan-cuota1" required></div>
+                        <div><label>Total de Cuotas del Plan</label><input type="number" id="plan-totalcuotas" required></div>
+                    </div>
+                    
+                    <div style="margin-top: 25px; padding: 15px; background: var(--bg-subtle); border-radius: 8px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                            <h4 style="color: var(--ford-blue);">Estructura de Cuotas</h4>
+                            <button type="button" id="btn-add-tramo" class="btn-secundario" style="padding: 6px 12px;">+ Agregar Tramo</button>
+                        </div>
+                        <div id="tramos-container"></div>
+                    </div>
+                    
+                    <div style="margin-top: 25px; padding: 15px; background: var(--bg-subtle); border-radius: 8px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                            <h4 style="color: var(--ford-blue);">Beneficios Especiales y Legales</h4>
+                            <button type="button" id="btn-add-beneficio" class="btn-secundario" style="padding: 6px 12px;">+ Agregar Beneficio</button>
+                        </div>
+                        <div id="beneficios-container"></div>
+                    </div>
+                    
+                    <div class="acciones-finales" style="margin-top: 25px;">
+                        <button type="button" id="btn-limpiar-form" class="btn-secundario">➕ Crear Nuevo Plan</button>
+                        <button type="submit" id="btn-guardar-plan" class="btn-primario">💾 Guardar Plan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- VISTA 2: GESTIÓN DE CIRCULARES -->
+        <div id="vista-circulares" style="display: none; grid-template-columns: 1fr 1.5fr; gap: 30px;">
+            <div class="columna">
+                <div class="panel-card">
+                    <legend>Circulares Activas</legend>
+                    <div id="lista-circulares-admin" style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                        <p style="text-align: center; color: var(--text-muted);">Cargando documentos...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="columna">
+                <form id="form-circular" class="panel-card">
+                    <legend>Subir Nuevo Documento</legend>
+                    <div style="margin-bottom: 15px;">
+                        <label>Título (Ej: Circular VM 073/2026)</label>
+                        <input type="text" id="circ-titulo" required style="width: 100%; padding: 12px; background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 8px;">
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <label>Descripción Corta</label>
+                        <input type="text" id="circ-desc" required placeholder="Ej: Escala de cuotas vigentes..." style="width: 100%; padding: 12px; background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 8px;">
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <label>Link del PDF (Google Drive, OneDrive, etc.)</label>
+                        <input type="url" id="circ-url" required placeholder="https://..." style="width: 100%; padding: 12px; background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 8px;">
+                    </div>
+                    <div class="acciones-finales" style="margin-top: 25px;">
+                        <button type="submit" id="btn-guardar-circular" class="btn-primario">Guardar Circular</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- VISTA 3: GESTIÓN DE EQUIPO (Usuarios) -->
+        <div id="vista-equipo" class="panel-card" style="display: none;">
+            <legend>👥 Gestión de Usuarios y Roles</legend>
+            <div class="table-responsive">
+                <table class="tabla-crm" style="width: 100%; text-align: left;">
+                    <thead>
+                        <tr>
+                            <th>Nombre Completo</th>
+                            <th>Email</th>
+                            <th>Rol en el Sistema</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-usuarios">
+                        <tr><td colspan="4" style="text-align:center; padding: 20px;">Cargando equipo...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+    <script type="module" src="admin.js"></script>
+</body>
+</html>

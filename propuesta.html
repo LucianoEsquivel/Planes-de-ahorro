@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tu Propuesta Digital | Ford Dietrich</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script>
+        const theme = localStorage.getItem('theme_dietrich') || 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+    </script>
+</head>
+<body>
+
+    <!-- PANTALLA DE CARGA (Ahora cubre el 100% de la pantalla siempre) -->
+    <div id="pantalla-carga">
+        <div class="loader-spinner"></div>
+        <h2 id="texto-carga">Cargando tu propuesta personalizada...</h2>
+    </div>
+
+    <!-- BOTÓN FLOTANTE TEMA -->
+    <button id="toggle-theme" class="btn-theme-float" title="Cambiar Tema">🌙</button>
+
+    <!-- LIGHTBOX PARA FOTOS -->
+    <div id="lightbox-modal" class="lightbox-overlay" style="display: none;">
+        <span class="lightbox-cerrar">&times;</span>
+        <img id="lightbox-img" src="" alt="Vehículo ampliado">
+    </div>
+
+    <!-- CONTENEDOR PRINCIPAL DE LA PROPUESTA -->
+    <div id="cotizacion-cliente" style="display: none;">
+
+        <header class="hero-propuesta">
+            <div class="top-nav-bar">
+                <div class="logos-brand">
+                    <img src="img/ford.png" alt="Ford" class="logo-ford">
+                    <img src="img/dietrich.png" alt="Dietrich" class="logo-dietrich">
+                </div>
+                <div class="badge-validez">
+                    <span>Vigencia: Hasta fin de mes</span>
+                </div>
+            </div>
+
+            <div class="hero-media-wrapper">
+                <div id="carrusel-track" class="carrusel-track"></div>
+                <div class="hero-overlay">
+                    <span class="tag-exclusivo">Propuesta Comercial Oficial</span>
+                    <h1 id="titulo-saludo">Hola, esta es tu unidad y este es tu plan</h1>
+                    <p id="subtitulo-hero">Veamos el plan para acceder a tu próximo vehículo de Ford</p>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-layout-grid">
+
+            <!-- BLOQUE 1: DETALLE DEL PLAN -->
+            <section class="card-propuesta card-plan">
+                <div class="card-header center" style="margin-bottom: 30px;">
+                    <h2 id="nombre-plan-base" style="font-size: 1.8rem; color: var(--ford-blue); font-weight: 800;">Plan...</h2>
+                    <p style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; margin-top: 5px;">Composición del Plan</p>
+                </div>
+
+                <div class="plan-body-grid">
+                    <div class="donut-chart-container">
+                        <div class="donut-chart" id="grafico-plan">
+                            <div class="donut-inner">
+                                <strong id="porcentaje-financiado" class="numero-destacado">--%</strong>
+                                <small>Financiado</small>
+                            </div>
+                        </div>
+                        <div class="donut-legend">
+                            <p><span class="dot-financiado"></span> Financiado <strong id="txt-pct-fin">(--%)</strong>: <strong id="monto-financiado-txt" class="txt-resaltado">$0</strong></p>
+                            <p><span class="dot-alicuota"></span> Alícuota extra <strong id="txt-pct-ali">(--%)</strong>: <strong id="monto-alicuota-txt" class="txt-resaltado">$0</strong></p>
+                        </div>
+                    </div>
+
+                    <div class="plan-datos-lista">
+                        <div class="dato-fila destacado">
+                            <span>Valor del Vehículo:</span>
+                            <strong id="precio-lista-txt">$0</strong>
+                        </div>
+                        <div class="dato-fila">
+                            <span>Plazo del Plan:</span>
+                            <strong id="total-cuotas-txt">-- cuotas</strong>
+                        </div>
+                        <div class="box-cuota-pura">
+                            <span>Cuota Pura:</span>
+                            <strong id="cuota-pura-txt">$0</strong>
+                        </div>
+                    </div>
+                </div>
+                <!-- MODAL TABLA DE CUOTAS (SOLO PC) -->
+        <div id="modal-cuotas" class="modal-overlay" style="display: none;">
+            <div class="modal-contenido" style="max-width: 600px;">
+                <div class="modal-header">
+                    <h3>Cronograma de Cuotas</h3>
+                    <button type="button" id="btn-cerrar-modal-cuotas" class="btn-cerrar-modal">&times;</button>
+                </div>
+                <div class="modal-body" style="padding: 0;">
+                    <table class="tabla-cuotas table-moderna" style="margin: 0;">
+                        <thead>
+                            <tr>
+                                <th>Rango de Cuotas</th>
+                                <th class="alinear-derecha">Valor Mensual</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-modal-cuotas">
+                            <!-- JS inyecta la tabla completa acá -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+            </section>
+
+            <!-- BLOQUE 2: OPERACIÓN Y CUOTAS -->
+            <section class="card-propuesta card-operacion-cuotas">
+                <div class="card-header">
+                    <div>
+                        <h2>Tu Operación Financiera y Cuotas</h2>
+                    </div>
+                </div>
+
+                <div class="analisis-capital-box">
+                    <p id="recomendacion-capital" class="txt-recomendacion">Analizando tu capital disponible...</p>
+                    
+                    <div id="alerta-cambio-modelo" class="badge-alerta" style="display: none; margin-top: 10px;">
+                        <strong>Cambio de Modelo:</strong> <span id="txt-cambio-modelo"></span>
+                    </div>
+                    <div id="box-usado" class="nota-usado" style="display: none; margin-top: 10px;">
+                        <strong>Toma de Usado:</strong> <span id="txt-detalle-usado"></span>
+                        <br><small>*El valor de toma del usado estará sujeto a peritaje presencial al momento de la entrega.</small>
+                    </div>
+                    <div id="nota-asesor" class="nota-asesor-box" style="display: none; margin-top: 10px;"></div>
+                </div>
+
+                <div class="tabla-cuotas-wrapper" style="margin-top: 20px;">
+                    <table class="tabla-cuotas table-moderna">
+                        <thead>
+                            <tr>
+                                <th>Rango de Cuotas</th>
+                                <th class="alinear-derecha">Valor Mensual</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-cuotas">
+                        </tbody>
+                    </table>
+                    <button id="btn-abrir-cuotas-pc" class="btn-ver-cuotas-pc">Ver resto del plazo</button>
+                </div>
+            </section>
+
+            <!-- BLOQUE 3: BENEFICIOS -->
+            <section class="card-propuesta card-beneficios">
+                <div class="card-header">
+                    <div>
+                        <h2>Beneficios Exclusivos</h2>
+                        <p>Bonificaciones activas en esta propuesta</p>
+                    </div>
+                </div>
+                <ul id="lista-beneficios" class="grid-beneficios-tags"></ul>
+                <button type="button" id="btn-abrir-legales" class="btn-link-legales">
+                    Consultar Circulares y Bases Legales
+                </button>
+            </section>
+
+            <!-- BLOQUE 4: SIMULADOR DE LICITACIÓN -->
+            <section class="card-propuesta card-simulador full-width-card">
+                <div class="card-header">
+                    <div>
+                        <h2>Simulador de Licitación</h2>
+                        <p>Calculá cómo adelantar cuotas puras (Mínimo a licitar: Monto no financiado)</p>
+                    </div>
+                </div>
+
+                <div class="simulador-grid-content">
+                    <div class="simulador-controls">
+                        <div class="monto-display">
+                            <span>Capital a licitar:</span>
+                            <strong id="monto-capital-texto">$0</strong>
+                        </div>
+                        <input type="range" id="slider-capital" min="0" max="100" value="0">
+                        <div class="progress-bar-labels">
+                            <span id="slider-min-lbl">Mínimo</span>
+                            <span id="slider-max-lbl">Máximo</span>
+                        </div>
+                        <small class="disclaimer-slider">*El adelanto cancela cuotas de atrás hacia adelante a valor de Cuota Pura.</small>
+                    </div>
+
+                    <div class="simulador-kpi-result">
+                        <div class="kpi-card">
+                            <span>Cuotas a cancelar</span>
+                            <strong id="cuotas-adelantadas">0</strong>
+                        </div>
+                        <div class="kpi-card highlight">
+                            <span>Te quedan por pagar</span>
+                            <strong id="cuotas-restantes">--</strong>
+                            <small>cuotas</small>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- BLOQUE 5: PROCESO -->
+            <section class="card-propuesta full-width-card card-proceso">
+                <div class="card-header center">
+                    <h2>Tu Camino al 0km en 5 Pasos</h2>
+                    <p>Proceso transparente y guiado de punta a punta</p>
+                </div>
+                <div class="stepper-horizontal">
+                    <div class="step-item"><div class="step-circle">1</div><h4>Suscripción</h4><p>Carga digital de DNI y abono de 1ra cuota.</p></div>
+                    <div class="step-item"><div class="step-circle">2</div><h4>Control Calidad</h4><p>Llamado de bienvenida y validación.</p></div>
+                    <div class="step-item"><div class="step-circle">3</div><h4>Administración</h4><p>Alta de grupo/orden y adhesión a débito.</p></div>
+                    <div class="step-item"><div class="step-circle">4</div><h4>Licitación</h4><p>Adjudicación por sorteo o licitación.</p></div>
+                    <div class="step-item"><div class="step-circle">5</div><h4>Entrega</h4><p>Retiro de tu Ford en Dietrich.</p></div>
+                </div>
+            </section>
+
+            <!-- BLOQUE 6: ECOSISTEMA -->
+            <section class="card-propuesta full-width-card card-ecosistema">
+                <div class="card-header center">
+                    <h2>Ecosistema Ford & Dietrich</h2>
+                    <p>Herramientas, accesorios y servicios oficiales</p>
+                </div>
+
+                <div class="grid-links-ecosistema">
+                    <a href="https://www.guia360ford.com.ar/" target="_blank" class="link-card square-card">
+                        <img src="img/ford.png" alt="Guía 360" class="logo-ecosistema">
+                        <strong>Guía 360° Ford</strong>
+                        <small>Explorá tu vehículo en 3D</small>
+                    </a>
+                    <a href="https://www.planovalo.com.ar/ovalo" target="_blank" class="link-card square-card">
+                        <img src="img/logo plan ovalo azul.png" alt="Plan Óvalo" class="logo-ecosistema" onerror="this.src='img/ford.png'">
+                        <strong>Plan Óvalo Oficial</strong>
+                        <small>Portal de clientes</small>
+                    </a>
+                    <a href="https://joiseguros.com/" target="_blank" class="link-card square-card">
+                        <span class="icon-link">🛡️</span>
+                        <strong>JOI Seguros</strong>
+                        <small>Cotizá tu póliza oficial</small>
+                    </a>
+                    <a href="https://grupodietrich.com/mundo-dietrich/strong/" target="_blank" class="link-card square-card">
+                        <span class="icon-link">💪</span>
+                        <strong>Strong Blindajes</strong>
+                        <small>Seguridad extrema</small>
+                    </a>
+                    <a href="https://grupodietrich.com/mundo-dietrich/strong/" target="_blank" class="link-card square-card">
+                        <span class="icon-link">🔧</span>
+                        <strong>Accesorios & Taller</strong>
+                        <small>Posventa Dietrich</small>
+                    </a>
+                </div>
+            </section>
+
+            <!-- BLOQUE 7: VIDEO -->
+            <section class="card-propuesta full-width-card card-video">
+                <div class="card-header">
+                    <div>
+                        <h2>Conocé tu próximo Ford en acción</h2>
+                        <p>Diseño, tecnología y potencia oficial</p>
+                    </div>
+                </div>
+                <div class="video-container">
+                    <iframe id="video-spot" src="" title="Video Spot Ford" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            </section>
+
+            <!-- BLOQUE 8: PAGOS Y MAPA -->
+            <section class="card-propuesta card-pagos">
+                <div class="card-header">
+                    <div>
+                        <h2>Canales de Pago Habilitados</h2>
+                        <p>Operaciones seguras y directas</p>
+                    </div>
+                </div>
+                <div class="medios-pago-grid">
+                    <div class="medio-item">Tarjetas de Crédito / Débito</div>
+                    <div class="medio-item">Transferencia Bancaria Directa</div>
+                    <div class="medio-item">Débito Automático en Cuenta</div>
+                </div>
+            </section>
+
+            <section class="card-propuesta card-sucursal">
+                <div class="card-header">
+                    <span class="icon-card">📍</span>
+                    <div>
+                        <h2>Ford Dietrich</h2>
+                        <p>Av. Corrientes 4242, Almagro, CABA</p>
+                    </div>
+                </div>
+                <div class="map-container">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d345.19273873038554!2d-58.4251565465358!3d-34.60301631207531!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bcca645c4338fd%3A0xee255937ca7bc6bc!2sFord%20%7C%20dietrich!5e0!3m2!1ses!2sar!4v1789166069844!5m2!1ses!2sar" width="100%" height="180" style="border:0; border-radius: 8px;" loading="lazy"></iframe>
+                </div>
+            </section>
+
+            <!-- BLOQUE 9: ASESOR -->
+            <section class="card-propuesta full-width-card card-asesor">
+                <div class="asesor-perfil-grid">
+                    <div class="asesor-avatar">
+                        <span style="font-size: 3rem;">👤</span>
+                    </div>
+                    <div class="asesor-info">
+                        <p class="asesor-label">Tu Asesor Comercial</p>
+                        <h3 id="asesor-nombre">Cargando asesor...</h3>
+                        <p>✉️ <span id="asesor-email">...</span></p>
+                        <p>📱 <span id="asesor-tel">...</span></p>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <br><br><br>
+
+        <!-- BOTONES FLOTANTES JUNTOS ABAJO -->
+        <div class="botones-flotantes-bottom">
+            <button id="btn-descargar-pdf" class="btn-flotante-pdf">
+                <span class="wpp-icon">📄</span>
+                <span>Descargar PDF</span>
+            </button>
+            <a href="#" id="btn-whatsapp" class="btn-flotante-wpp">
+                <span class="wpp-icon">💬</span>
+                <span>Hablar con mi asesor</span>
+            </a>
+        </div>
+
+        <!-- MODAL BASES LEGALES -->
+        <div id="modal-legales" class="modal-overlay" style="display: none;">
+            <div class="modal-contenido">
+                <div class="modal-header">
+                    <h3>Términos y Circulares Comerciales</h3>
+                    <button type="button" id="btn-cerrar-legales" class="btn-cerrar-modal">&times;</button>
+                </div>
+                <div id="cuerpo-legales" class="modal-body"></div>
+            </div>
+        </div>
+    </div>
+
+<!-- EL TRUCO PARA EL PDF: Posición absoluta fuera de la pantalla... -->
+    <div style="position: absolute; left: -9999px; top: -9999px; width: 800px; z-index: -1;">
+        <div id="plantilla-pdf" style="background: white; padding: 40px; color: #333; font-family: 'Montserrat', sans-serif;">
+            <!-- Se inyecta dinámicamente desde JS -->
+        </div>
+    </div>
+
+    <script type="module" src="propuesta.js"></script>
+</body>
+</html>
