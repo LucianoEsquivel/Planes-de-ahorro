@@ -1,6 +1,6 @@
 {
-  "name": "Cotizador Ford Dietrich",
-  "short_name": "Dietrich",
+  "name": "Cotizador plan de ahorro Dietrich",
+  "short_name": "Plan",
   "start_url": "./login.html",
   "display": "standalone",
   "background_color": "#0f172a",
