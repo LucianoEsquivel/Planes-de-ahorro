@@ -327,14 +327,14 @@ async function cargarPropuesta() {
                     slider.addEventListener('input', (e) => runSimulador(e.target.value));
                 }
                     
-
+            }        
                 // Comentarios Asesor
-                if (datos.comentarios) {
+            if (datos.comentarios) {
                     const boxAsesor = document.getElementById('nota-asesor');
                     boxAsesor.style.display = 'block';
                     boxAsesor.innerHTML = `<strong>Nota de tu asesor:</strong> <em>"${datos.comentarios}"</em>`;
-                }
-            }    
+            }
+          
             // Beneficios y Legales
             const listaBen = document.getElementById('lista-beneficios');
             listaBen.innerHTML = '';
