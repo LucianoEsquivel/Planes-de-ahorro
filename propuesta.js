@@ -295,7 +295,7 @@ async function cargarPropuesta() {
 
                 // Simulador Lógico (Mínimo = Alícuota)
                 const slider = document.getElementById('slider-capital');
-                // Agregamos este IF para que no se rompa si comentaste el HTML
+                
                 if (slider) {
                     const montoCapTxt = document.getElementById('monto-capital-texto');
                     const kpiAdelantadas = document.getElementById('cuotas-adelantadas');
@@ -326,14 +326,15 @@ async function cargarPropuesta() {
                     runSimulador(slider.value);
                     slider.addEventListener('input', (e) => runSimulador(e.target.value));
                 }
+                    
 
-            // Comentarios Asesor
-            if (datos.comentarios) {
-                const boxAsesor = document.getElementById('nota-asesor');
-                boxAsesor.style.display = 'block';
-                boxAsesor.innerHTML = `<strong>Nota de tu asesor:</strong> <em>"${datos.comentarios}"</em>`;
-            }
-
+                // Comentarios Asesor
+                if (datos.comentarios) {
+                    const boxAsesor = document.getElementById('nota-asesor');
+                    boxAsesor.style.display = 'block';
+                    boxAsesor.innerHTML = `<strong>Nota de tu asesor:</strong> <em>"${datos.comentarios}"</em>`;
+                }
+            }    
             // Beneficios y Legales
             const listaBen = document.getElementById('lista-beneficios');
             listaBen.innerHTML = '';
