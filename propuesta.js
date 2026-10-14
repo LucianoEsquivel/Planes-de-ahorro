@@ -295,37 +295,37 @@ async function cargarPropuesta() {
 
                 // Simulador Lógico (Mínimo = Alícuota)
                 const slider = document.getElementById('slider-capital');
-                const montoCapTxt = document.getElementById('monto-capital-texto');
-                const kpiAdelantadas = document.getElementById('cuotas-adelantadas');
-                const kpiRestantes = document.getElementById('cuotas-restantes');
-
-                slider.min = alicuota; 
-                slider.max = fin.precioLista;
-                slider.step = 10000;
-                
-                document.getElementById('slider-min-lbl').textContent = `Mínimo: $${new Intl.NumberFormat('es-AR').format(alicuota)}`;
-                document.getElementById('slider-max-lbl').textContent = `Máximo: $${new Intl.NumberFormat('es-AR').format(fin.precioLista)}`;
-
-                slider.value = Math.max(capitalCliente, alicuota);
-
-                const runSimulador = (val) => {
-                    const cap = Number(val);
-                    montoCapTxt.textContent = `$${new Intl.NumberFormat('es-AR').format(cap)}`;
+                // Agregamos este IF para que no se rompa si comentaste el HTML
+                if (slider) {
+                    const montoCapTxt = document.getElementById('monto-capital-texto');
+                    const kpiAdelantadas = document.getElementById('cuotas-adelantadas');
+                    const kpiRestantes = document.getElementById('cuotas-restantes');
                     
-                    const excedente = cap - alicuota;
-                    let canceladas = 0;
-                    if (excedente > 0) {
-                        canceladas = Math.floor(excedente / fin.cuotaPura);
-                    }
-                    let quedan = fin.totalCuotas - canceladas;
-                    if (quedan < 0) { quedan = 0; canceladas = fin.totalCuotas; }
-
-                    kpiAdelantadas.textContent = canceladas;
-                    kpiRestantes.textContent = quedan;
-                };
-                runSimulador(slider.value);
-                slider.addEventListener('input', (e) => runSimulador(e.target.value));
-            }
+                    slider.min = alicuota; 
+                    slider.max = fin.precioLista;
+                    slider.step = 10000;
+                    
+                    document.getElementById('slider-min-lbl').textContent = `Mínimo: $${new Intl.NumberFormat('es-AR').format(alicuota)}`;
+                    document.getElementById('slider-max-lbl').textContent = `Máximo: $${new Intl.NumberFormat('es-AR').format(fin.precioLista)}`;
+                    slider.value = Math.max(capitalCliente, alicuota);
+                    
+                    const runSimulador = (val) => {
+                        const cap = Number(val);
+                        montoCapTxt.textContent = `$${new Intl.NumberFormat('es-AR').format(cap)}`;
+                        
+                        const excedente = cap - alicuota;
+                        let canceladas = 0;
+                        if (excedente > 0) {
+                            canceladas = Math.floor(excedente / fin.cuotaPura);
+                        }
+                        let quedan = fin.totalCuotas - canceladas;
+                        if (quedan < 0) { quedan = 0; canceladas = fin.totalCuotas; }
+                        kpiAdelantadas.textContent = canceladas;
+                        kpiRestantes.textContent = quedan;
+                    };
+                    runSimulador(slider.value);
+                    slider.addEventListener('input', (e) => runSimulador(e.target.value));
+                }
 
             // Comentarios Asesor
             if (datos.comentarios) {
