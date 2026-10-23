@@ -359,6 +359,7 @@ formulario.addEventListener('submit', async (e) => {
                     method: 'POST',
                     mode: 'no-cors', // Evita el bloqueo de seguridad del navegador
                     body: JSON.stringify(datosParaSheets),
+                    credentials: 'omit',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' }
                 });
             } catch (err) {
