@@ -477,7 +477,7 @@ h1, h2, h3, h4, strong {
     font-weight: bold;
 }
 .badge-estado.nuevo { background: var(--ford-light); color: var(--ford-blue); }
-
+.badge-estado.vista { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
 .acciones-tabla {
     display: flex;
     gap: 8px;

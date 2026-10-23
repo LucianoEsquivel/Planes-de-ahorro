@@ -1,4 +1,4 @@
-import { db, doc, getDoc } from './firebase.js';
+import { db, auth, doc, getDoc, updateDoc } from './firebase.js';
 
 // 1. Extraemos el ID
 const urlParams = new URLSearchParams(window.location.search);
@@ -47,7 +47,10 @@ async function cargarPropuesta() {
         if (docSnap.exists()) {
             const datos = docSnap.data();
             const fin = datos.dataFinanciera;
-            
+            // Si la abre el cliente (no hay vendedor logueado) y aún no estaba "Vista", actualizamos el estado
+            if (!auth.currentUser && datos.estado !== "Vista") {
+                updateDoc(docRef, { estado: "Vista" }).catch(e => console.warn("No se pudo marcar como vista:", e));
+            }
             // Guardamos para el PDF
             datosGlobales = datos;
             finGlobales = fin;
@@ -404,13 +407,13 @@ async function cargarPropuesta() {
     }
 }
 
+
 // ==========================================
 // LÓGICA GENERAR PDF INFALIBLE 
 // ==========================================
 document.getElementById('btn-descargar-pdf').addEventListener('click', () => {
-    if(!finGlobales || !datosGlobales) return;
+    if (!finGlobales || !datosGlobales) return;
 
-    // EL TRUCO ANTI-BLANCO
     const scrollYOriginal = window.scrollY;
     window.scrollTo(0, 0);
 
@@ -420,59 +423,65 @@ document.getElementById('btn-descargar-pdf').addEventListener('click', () => {
     textoCarga.textContent = "Generando documento PDF oficial...";
     pantallaCarga.style.display = 'flex';
 
-    // HTML EXACTO CON MEDIDAS (700px)
+    // Tomamos los datos reales del asesor que ya están en pantalla
+    const nombreAsesorPDF = document.getElementById('asesor-nombre').textContent;
+    const emailAsesorPDF = document.getElementById('asesor-email').textContent;
+    const telAsesorPDF = document.getElementById('asesor-tel').textContent;
+
+    // Contenedor alineado a la izquierda (sin margin auto) para evitar recortes
     const htmlParaPDF = `
-        <div style="width: 700px; margin: 0 auto; padding: 10px; font-family: 'Montserrat', sans-serif; color: #333; background: #fff; box-sizing: border-box;">
+        <div style="width: 680px; margin: 0; padding: 15px; font-family: 'Montserrat', sans-serif; color: #333; background: #fff; box-sizing: border-box;">
             
             <div style="display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid #003478; padding-bottom: 10px; margin-bottom: 20px;">
-                <h2 style="color: #003478; margin:0; font-size: 1.6rem; font-weight: 800;">Propuesta Comercial Ford Dietrich</h2>
+                <h2 style="color: #003478; margin:0; font-size: 1.5rem; font-weight: 800;">Propuesta Comercial Ford Dietrich</h2>
                 <p style="margin:0; font-size: 0.95rem;">Cliente: <strong>${datosGlobales.clienteNombre}</strong></p>
             </div>
 
-            <div style="display: flex; justify-content: space-between; margin-bottom: 25px;">
-                ${galeriaGlobal.map(img => `<img src="${img}" style="width: 32%; height: 135px; object-fit: cover; border-radius: 8px;">`).join('')}
+            <div style="display: flex; justify-content: space-between; gap: 10px; margin-bottom: 25px;">
+                ${galeriaGlobal.slice(0, 3).map(img => `<img src="${img}" style="width: 32%; height: 130px; object-fit: cover; border-radius: 8px;">`).join('')}
             </div>
 
             <div style="page-break-inside: avoid;">
-                <h3 style="background: #003478; color: white; padding: 10px 15px; border-radius: 6px; margin-bottom: 15px; font-size: 1.2rem;">${finGlobales.nombreCompleto}</h3>
-                <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem; margin-bottom: 20px;">
+                <h3 style="background: #003478; color: white; padding: 10px 15px; border-radius: 6px; margin-bottom: 15px; font-size: 1.15rem;">${finGlobales.nombreCompleto}</h3>
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem; margin-bottom: 20px;">
                     <tr><td style="padding: 8px 5px; border-bottom: 1px solid #ddd;">Valor del Vehículo de Lista</td><td style="text-align:right; border-bottom: 1px solid #ddd;"><strong>$${new Intl.NumberFormat('es-AR').format(finGlobales.precioLista)}</strong></td></tr>
                     <tr><td style="padding: 8px 5px; border-bottom: 1px solid #ddd;">Monto Financiado</td><td style="text-align:right; border-bottom: 1px solid #ddd;"><strong>$${new Intl.NumberFormat('es-AR').format(finGlobales.montoFinanciado)}</strong></td></tr>
                     <tr><td style="padding: 8px 5px; border-bottom: 1px solid #ddd;">Alícuota Extra (Monto No Financiable)</td><td style="text-align:right; border-bottom: 1px solid #ddd;"><strong>$${new Intl.NumberFormat('es-AR').format(finGlobales.alicuotaComplementaria)}</strong></td></tr>
-                    <tr><td style="padding: 8px 5px; border-bottom: 1px solid #ddd;">Valor Actual de Cuota Pura</td><td style="text-align:right; color:#003478; border-bottom: 1px solid #ddd; font-size: 1.15rem;"><strong>$${new Intl.NumberFormat('es-AR').format(finGlobales.cuotaPura)}</strong></td></tr>
+                    <tr><td style="padding: 8px 5px; border-bottom: 1px solid #ddd;">Valor Actual de Cuota Pura</td><td style="text-align:right; color:#003478; border-bottom: 1px solid #ddd; font-size: 1.1rem;"><strong>$${new Intl.NumberFormat('es-AR').format(finGlobales.cuotaPura)}</strong></td></tr>
                 </table>
             </div>
 
             <div style="page-break-inside: avoid;">
-                <h4 style="margin-bottom: 10px; color: #003478; border-bottom: 1px solid #003478; padding-bottom: 5px; font-size: 1.05rem;">Estructura de Cuotas Proyectada</h4>
-                <table style="width: 100%; border-collapse: collapse; margin-bottom: 25px; font-size: 0.9rem;">
+                <h4 style="margin-bottom: 10px; color: #003478; border-bottom: 1px solid #003478; padding-bottom: 5px; font-size: 1rem;">Estructura de Cuotas Proyectada</h4>
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 0.85rem;">
                     <tr style="background: #f4f7f9;">
-                        <th style="padding: 10px; text-align:left; border-bottom: 1px solid #ccc;">Rango de Cuotas</th>
-                        <th style="padding: 10px; text-align:right; border-bottom: 1px solid #ccc;">Valor Mensual</th>
+                        <th style="padding: 8px 10px; text-align:left; border-bottom: 1px solid #ccc;">Rango de Cuotas</th>
+                        <th style="padding: 8px 10px; text-align:right; border-bottom: 1px solid #ccc;">Valor Mensual</th>
                     </tr>
-                    ${finGlobales.estructuraCuotas.map(c => `<tr><td style="padding: 8px 10px; border-bottom: 1px solid #eee;">Cuotas ${c.rango}</td><td style="padding: 8px 10px; border-bottom: 1px solid #eee; text-align:right; font-weight: bold;">$${new Intl.NumberFormat('es-AR').format(c.valor)}</td></tr>`).join('')}
+                    ${datosGlobales.incluyeCuota1 && datosGlobales.valorCuota1 ? `<tr><td style="padding: 7px 10px; border-bottom: 1px solid #eee; color: #003478; font-weight: bold;">Cuota 1</td><td style="padding: 7px 10px; border-bottom: 1px solid #eee; text-align:right; font-weight: bold; color: #003478;">$${new Intl.NumberFormat('es-AR').format(datosGlobales.valorCuota1)}</td></tr>` : ''}
+                    ${finGlobales.estructuraCuotas.map(c => `<tr><td style="padding: 7px 10px; border-bottom: 1px solid #eee;">Cuotas ${c.rango}</td><td style="padding: 7px 10px; border-bottom: 1px solid #eee; text-align:right; font-weight: bold;">$${new Intl.NumberFormat('es-AR').format(c.valor)}</td></tr>`).join('')}
                 </table>
             </div>
 
             <div style="page-break-inside: avoid;">
-                <h4 style="margin-bottom: 10px; color: #003478; border-bottom: 1px solid #003478; padding-bottom: 5px; font-size: 1.05rem;">Beneficios Exclusivos Asignados</h4>
-                <ul style="margin-bottom: 20px; font-size: 0.95rem; line-height: 1.8; list-style-type: none; padding-left: 0;">
-                    ${datosGlobales.beneficiosSeleccionados.map(b => `<li>✅ <strong>${b}</strong></li>`).join('')}
+                <h4 style="margin-bottom: 10px; color: #003478; border-bottom: 1px solid #003478; padding-bottom: 5px; font-size: 1rem;">Beneficios Exclusivos Asignados</h4>
+                <ul style="margin-bottom: 20px; font-size: 0.9rem; line-height: 1.6; list-style-type: none; padding-left: 0;">
+                    ${datosGlobales.beneficiosSeleccionados.map(b => `<li>✓ <strong>${b}</strong></li>`).join('')}
                 </ul>
             </div>
 
             <div style="display: flex; justify-content: space-between; margin-top: 15px; padding-top: 15px; border-top: 1px solid #ccc; font-size: 0.85rem; page-break-inside: avoid;">
                 <div>
-                    <h4 style="color: #003478; margin-bottom: 5px; font-size: 1rem;">Tu Asesor Comercial</h4>
-                    <p style="margin: 0; line-height: 1.5;"><strong>Juan Pérez</strong><br>jperez@dietrich.com.ar<br>+54 9 11 1234-5678</p>
+                    <h4 style="color: #003478; margin-bottom: 5px; font-size: 0.95rem;">Tu Asesor Comercial</h4>
+                    <p style="margin: 0; line-height: 1.5;"><strong>${nombreAsesorPDF}</strong><br>${emailAsesorPDF}<br>${telAsesorPDF}</p>
                 </div>
                 <div style="text-align: right;">
-                    <h4 style="color: #003478; margin-bottom: 5px; font-size: 1rem;">Casa Central Dietrich</h4>
+                    <h4 style="color: #003478; margin-bottom: 5px; font-size: 0.95rem;">Casa Central Dietrich</h4>
                     <p style="margin: 0; line-height: 1.5;">Av. Corrientes 4242<br>Almagro, CABA<br>Canales de pago habilitados</p>
                 </div>
             </div>
 
-            <div style="margin-top: 25px; padding: 15px; background: #f4f7f9; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.65rem; color: #4a5568; line-height: 1.4; page-break-inside: avoid; text-align: justify;">
+            <div style="margin-top: 20px; padding: 12px; background: #f4f7f9; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.65rem; color: #4a5568; line-height: 1.4; page-break-inside: avoid; text-align: justify;">
                 <strong style="color: #003478;">Bases y Condiciones Legales:</strong><br><br>
                 ${datosGlobales.textosLegales && datosGlobales.textosLegales.length > 0 ? datosGlobales.textosLegales.join(' ') : 'Términos estándar de Plan Óvalo.'}
                 <br><br>El valor de la cuota pura es referencial y no incluye gastos administrativos, diferimientos ni seguros de vida o del automotor. Operación sujeta al valor móvil de la unidad dictado por Ford Argentina S.C.A.
@@ -480,27 +489,29 @@ document.getElementById('btn-descargar-pdf').addEventListener('click', () => {
         </div>
     `;
 
-    // TRUCO ANTI-CORTE
     const opt = {
-      margin:       [10, 10, 10, 10], 
-      filename:     `Propuesta_Ford_${datosGlobales.clienteNombre}.pdf`,
-      image:        { type: 'jpeg', quality: 1 },
-      html2canvas:  { 
-          scale: 2, 
-          useCORS: true, 
-          scrollY: 0,           
-          windowWidth: 780      
-      },
-      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        margin:       [10, 10, 10, 10],
+        filename:     `Propuesta_Ford_${datosGlobales.clienteNombre}.pdf`,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { 
+            scale: 2, 
+            useCORS: true, 
+            scrollX: 0,
+            scrollY: 0,
+            x: 0,
+            y: 0,
+            windowWidth: 720
+        },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
     setTimeout(() => {
         html2pdf().set(opt).from(htmlParaPDF).save().then(() => {
             pantallaCarga.style.display = 'none';
-            textoCarga.textContent = "Cargando tu propuesta personalizada...";
+            textoCarga.textContent = "Cargando tu propuesta...";
             window.scrollTo(0, scrollYOriginal);
         });
-    }, 800); 
+    }, 600);
 });
 
 cargarPropuesta();

@@ -252,7 +252,7 @@ async function cargarHistorialPaginado() {
                 <td><span class="cliente-nombre">${data.clienteNombre || 'Sin nombre'}</span>${etiquetaVendedor}</td>
                 <td><strong>${data.planBase}</strong><br><small style="color: var(--text-muted);">${data.cambioModelo !== "Ninguno" ? '🔄 ' + data.cambioModelo : 'Modelo base'}</small></td>
                 <td>$${new Intl.NumberFormat('es-AR').format(Number(String(data.clienteCapital || '0').replace(/\D/g, '')))}</td>
-                <td><span class="badge-estado nuevo">${data.estado || 'Generada'}</span></td>
+                <td><span class="badge-estado ${data.estado === 'Vista' ? 'vista' : 'nuevo'}">${data.estado || 'Generada'}</span></td>
                 <td>
                     <div class="acciones-tabla">
                         <a href="${urlEditar}" class="btn-accion-sm" title="Editar Cotización">✏️</a>

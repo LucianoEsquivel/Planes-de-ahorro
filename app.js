@@ -326,54 +326,57 @@ formulario.addEventListener('submit', async (e) => {
     try {
         let finalId = "";
         
-        // 1. Guardar en Firebase (como siempre)
+        // 1. Guardar en Firebase
         if (editId) {
             await updateDoc(doc(db, "cotizaciones", editId), cotizacionData);
             finalId = editId;
-            alert(" Cotizaci n actualizada correctamente!");
         } else {
             cotizacionData.fechaCreacion = serverTimestamp();
             const docRef = await addDoc(collection(db, "cotizaciones"), cotizacionData);
             finalId = docRef.id;
-            alert(" Cotizaci n generada con  xito!");
         }
         
-        // 2. Enviar histórico a Google Sheets (Solo si NO es una edición, o modificalo a tu gusto)
+        // 2. Enviar histórico a Google Sheets (Esperamos con await antes de cambiar de página)
         if (!editId) {
-            const URL_WEBHOOK_SHEETS = "https://script.google.com/macros/s/AKfycbzMVrgRnjDZPi6MdrYxYZnUiIa_hkHaPYLOZe5--LFWRjh9I06JPmjueQLHGtFViqF61Q/exec"; // Pega la URL aquí dentro de las comillas
+            const URL_WEBHOOK_SHEETS = "https://script.google.com/macros/s/AKfycbzMVrgRnjDZPi6MdrYxYZnUiIa_hkHaPYLOZe5--LFWRjh9I06JPmjueQLHGtFViqF61Q/exec";
             
-            // Preparamos los datos limpios para Sheets
             const datosParaSheets = {
                 idCotizacion: finalId,
+                fechaCreacion: new Date().toLocaleDateString('es-AR'),
                 vendedorEmail: vendedorAsignadoEmail,
                 clienteNombre: cotizacionData.clienteNombre,
                 planBase: cotizacionData.planBase + (cotizacionData.cambioModelo !== "Ninguno" ? ` (Cambio a ${cotizacionData.cambioModelo})` : ""),
                 clienteCapital: cotizacionData.clienteCapital,
                 entregaUsado: cotizacionData.entregaUsado,
-                valorCuota1: cotizacionData.valorCuota1 ? `$${new Intl.NumberFormat('es-AR').format(cotizacionData.valorCuota1)}` : "No incluida",
+                valorCuota1: cotizacionData.incluyeCuota1 && cotizacionData.valorCuota1 ? `$${new Intl.NumberFormat('es-AR').format(cotizacionData.valorCuota1)}` : "No incluida",
                 beneficios: cotizacionData.beneficiosSeleccionados.join(" | "),
                 comentarios: cotizacionData.comentarios,
                 vigencia: cotizacionData.vigencia
             };
 
-            // Enviamos el aviso a Sheets en segundo plano (sin frenar la app)
-            fetch(URL_WEBHOOK_SHEETS, {
-                method: 'POST',
-                body: JSON.stringify(datosParaSheets),
-                headers: { 'Content-Type': 'application/json' }
-            }).catch(err => console.error("Error enviando a Sheets:", err));
+            try {
+                await fetch(URL_WEBHOOK_SHEETS, {
+                    method: 'POST',
+                    mode: 'no-cors', // Evita el bloqueo de seguridad del navegador
+                    body: JSON.stringify(datosParaSheets),
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+                });
+            } catch (err) {
+                console.error("Error enviando a Sheets:", err);
+            }
         }
 
-        // 3. Redirigir y copiar link
+        // 3. Copiar link, avisar y redirigir
         const linkUnico = `${window.location.origin}/propuesta.html?id=${finalId}`;
         await navigator.clipboard.writeText(linkUnico);
+        alert(editId ? "✅ ¡Cotización actualizada correctamente!" : "✅ ¡Cotización generada con éxito!");
         window.location.href = "catalogo.html";
             
     } catch (error) {
         console.error("Error al guardar: ", error);
-        alert("  Hubo un error de conexi n al guardar.");
+        alert("⚠️ Hubo un error de conexión al guardar.");
     } finally {
-        btnGenerar.textContent = editId ? " Actualizar Cotizaci n" : " Generar Link y Guardar";
+        btnGenerar.textContent = editId ? "Actualizar Cotización" : "Generar Link y Guardar";
         btnGenerar.disabled = false;
     }
 });
