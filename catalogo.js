@@ -2,6 +2,17 @@ import { db, auth, onAuthStateChanged, collection, getDocs, getDoc, doc, updateD
 let usuarioActual = null;
 let rolActual = "Vendedor";
 
+// Función para limpiar texto y evitar inyección de código (XSS)
+function escaparHTML(texto) {
+    if (!texto) return '';
+    return texto.toString()
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
 // --- CANDADO DE SEGURIDAD Y SEMÁFORO DE ROLES ---
 onAuthStateChanged(auth, async (user) => {
     if (!user) {
@@ -83,12 +94,12 @@ function renderizarCatalogo() {
             card.className = 'card-plan-item';
             card.innerHTML = `
                 <div class="card-plan-img-wrapper">
-                    <img src="${plan.imgFoto || 'img/ford.png'}" alt="${plan.nombreCompleto}">
+                    <img src="${escaparHTML(plan.imgFoto) || 'img/ford.png'}" alt="${escaparHTML(plan.nombreCompleto)}">
                     <span class="card-plan-badge">${plan.totalCuotas} Cuotas</span>
                 </div>
                 <div class="card-plan-body">
                     <div>
-                        <h3 class="card-plan-title">${plan.nombreCompleto}</h3>
+                        <h3 class="card-plan-title">${escaparHTML(plan.nombreCompleto)}</h3>
                         <p class="card-plan-subtitle">Plan Oficial Ford Dietrich</p>
                     </div>
                     <div class="card-plan-footer">
